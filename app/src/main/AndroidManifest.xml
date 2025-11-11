@@ -20,9 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".fragment.HomeFragment" android:theme="@style/AppTheme" />
-        <activity android:name=".fragment.TvFragment" android:theme="@style/AppTheme" />
-        <activity android:name=".fragment.MyFragment" android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

@@ -39,6 +39,5 @@ Thumbs.db
 .kotlin/
 /app/build/
 /app/release/
-/app/src/androidTest/
-/app/src/test/
+/app/lint-baseline.xml
 /local.properties

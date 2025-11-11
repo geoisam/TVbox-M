@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.pjs.tvbox.fragment.HomeFragment
-import com.pjs.tvbox.fragment.MyFragment
+import com.pjs.tvbox.fragment.MineFragment
 import com.pjs.tvbox.fragment.TvFragment
 
 class MainActivity : AppCompatActivity() {
@@ -31,8 +31,8 @@ class MainActivity : AppCompatActivity() {
                     switchFragment(TvFragment())
                     true
                 }
-                R.id.nav_my -> {
-                    switchFragment(MyFragment())
+                R.id.nav_mine -> {
+                    switchFragment(MineFragment())
                     true
                 }
                 else -> false
