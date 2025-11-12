@@ -3,7 +3,7 @@
     <string name="app_name">TVbox M</string>
     <string name="app_version">v1.0.0 (20251225)</string>
     <string name="nav_home">首页</string>
-    <string name="nav_tv">电视</string>
+    <string name="nav_live">直播</string>
     <string name="nav_mine">我的</string>
     <string name="mine_theme">主题模式</string>
     <string name="mine_setting">设置</string>
@@ -22,6 +22,6 @@
     <string name="mine_date_week">星期二</string>
     <string name="mine_date_day">29</string>
     <string name="mine_date_lunar">腊月十七</string>
-    <string name="mine_date_year">辛巳(蛇)年 辛丑月 丁酉日</string>
+    <string name="mine_date_year">辛巳蛇年 辛丑牛月 丁酉鸡日</string>
     <string name="mine_warning">本软件一直为 开源免费 使用，如果你是从某些地方买的话，你就是被骗了</string>
 </resources>

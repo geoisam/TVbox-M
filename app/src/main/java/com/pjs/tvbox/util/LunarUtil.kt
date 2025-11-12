@@ -1,42 +1,59 @@
 package com.pjs.tvbox.util
 
-import java.time.LocalDateTime
 import com.nlf.calendar.Solar
 import com.nlf.calendar.Lunar
+import java.time.ZonedDateTime
+import java.time.ZoneId
 import java.util.*
 
 object LunarUtil {
-    private var now = LocalDateTime.now()
-    private var year = now.year
-    private var month = now.monthValue
-    private var day = now.dayOfMonth
-    private var hour = now.hour
-    private var minute = now.minute
-    private var second = now.second
-    private var yearSolar = year
-    private var monthSolar = month
-    private var daySolar = day
-    private var weekSolar = Solar.fromYmdHms(year,month,day,hour,minute,second).weekInChinese
-    private var timeShiChen = Lunar.fromYmdHms(year,month,day,hour,minute,second).timeZhi
-    private var lunar = Lunar.fromDate(Date())
-    private var monthLunar = lunar.monthInChinese
-    private var dayLunar = lunar.dayInChinese
-    private var yearGanZhi = lunar.yearInGanZhi
-    private var monthGanZhi = lunar.monthInGanZhi
-    private var dayGanZhi = lunar.dayInGanZhi
-    private var yearZodiac = lunar.yearShengXiao
-    private var monthZodiac =lunar.monthShengXiao
-    private var dayZodiac =lunar.dayShengXiao
+    fun getYearMonth(): String {
+        val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
+        val yearSolar = timeNow.year
+        val monthSolar = timeNow.monthValue
+        return "${yearSolar} 年 ${monthSolar} 月"
+    }
 
-    fun getYearMonth(): String = "${yearSolar} 年 ${monthSolar} 月"
+    fun getDay(): String {
+        val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
+        return timeNow.dayOfMonth.toString()
+    }
 
-    fun getDay(): String = daySolar.toString()
+    fun getWeek(): String {
+        val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
+        val solar = Solar.fromYmdHms(
+            timeNow.year,
+            timeNow.monthValue,
+            timeNow.dayOfMonth,
+            timeNow.hour,
+            timeNow.minute,
+            timeNow.second
+        )
+        return "星期${solar.weekInChinese}"
+    }
 
-    fun getWeek(): String = "星期${weekSolar}"
+    fun getMonthDay(): String {
+        val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
+        val lunar = Lunar.fromDate(Date.from(timeNow.toInstant()))
+        return "${lunar.monthInChinese}月${lunar.dayInChinese}"
+    }
 
-    fun getMonthDay(): String = "${monthLunar}月${dayLunar}"
+    fun getGanZhi(): String {
+        val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
+        val lunar = Lunar.fromDate(Date.from(timeNow.toInstant()))
+        return "${lunar.yearInGanZhi}${lunar.yearShengXiao}年 ${lunar.monthInGanZhi}${lunar.monthShengXiao}月 ${lunar.dayInGanZhi}${lunar.dayShengXiao}日"
+    }
 
-    fun getGanZhi(): String = "${yearGanZhi}${yearZodiac}年 ${monthGanZhi}${monthZodiac}月 ${dayGanZhi}${dayZodiac}日"
-
-    fun getShiChen(): String = "${timeShiChen}时"
+    fun getShiChen(): String {
+        val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
+        val lunar = Lunar.fromYmdHms(
+            timeNow.year,
+            timeNow.monthValue,
+            timeNow.dayOfMonth,
+            timeNow.hour,
+            timeNow.minute,
+            timeNow.second
+        )
+        return "${lunar.timeZhi}时"
+    }
 }
