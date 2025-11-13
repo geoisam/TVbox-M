@@ -256,7 +256,6 @@ fun selectSchemeForContrast(isDark: Boolean): ColorScheme {
     val context = LocalContext.current
     var colorScheme = if (isDark) darkScheme else lightScheme
     val isPreview = LocalInspectionMode.current
-    // TODO(b/336693596): UIModeManager is not yet supported in preview
     if (!isPreview && isContrastAvailable()) {
         val uiModeManager = context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
         val contrastLevel = uiModeManager.contrast
@@ -279,10 +278,9 @@ fun selectSchemeForContrast(isDark: Boolean): ColorScheme {
 @Composable
 fun ContrastAwareReplyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content:
-    @Composable()
+    @Composable
         () -> Unit,
 ) {
     val replyColorScheme = when {

@@ -9,9 +9,7 @@ plugins {
 
 android {
     namespace = "com.pjs.tvbox"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.pjs.tvbox"
@@ -57,17 +55,12 @@ android {
             val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
             output.outputFileName = "${applicationId}-v${versionName}-${versionCode}.apk"
         }
-
     }
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     buildFeatures {
@@ -77,6 +70,7 @@ android {
 
     packaging {
         resources {
+            excludes += "DebugProbesKt.bin"
             excludes += "/META-INF/AL2.0"
             excludes += "/META-INF/LGPL2.1"
         }
@@ -103,7 +97,6 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.accompanist.systemuicontroller)
 
     implementation(libs.lunar)
     implementation(libs.gsyvideoplayer.java)

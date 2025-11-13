@@ -38,6 +38,6 @@ Thumbs.db
 .DS_Store
 .kotlin/
 /app/build/
+/app/debug/
 /app/release/
-/app/lint-baseline.xml
 /local.properties
