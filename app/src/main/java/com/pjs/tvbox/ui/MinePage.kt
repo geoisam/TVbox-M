@@ -15,6 +15,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -125,6 +126,7 @@ fun MinePage() {
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
                         .clickable {
                             updateDateState()
                             Toast.makeText(context, "日历时间已更新", Toast.LENGTH_SHORT).show()
@@ -201,7 +203,8 @@ fun MinePage() {
                         onClick = {
                             Toast.makeText(context, "收藏", Toast.LENGTH_SHORT).show()
                         },
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f)
+                            .clip(RoundedCornerShape(8.dp)),
                     )
                     ActionCard(
                         iconRes = R.drawable.ic_history,
@@ -209,7 +212,8 @@ fun MinePage() {
                         onClick = {
                             Toast.makeText(context, "观看历史", Toast.LENGTH_SHORT).show()
                         },
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f)
+                            .clip(RoundedCornerShape(8.dp)),
                     )
                     ActionCard(
                         iconRes = R.drawable.ic_download,
@@ -217,13 +221,15 @@ fun MinePage() {
                         onClick = {
                             Toast.makeText(context, "下载缓存", Toast.LENGTH_SHORT).show()
                         },
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f)
+                            .clip(RoundedCornerShape(8.dp)),
                     )
                 }
             }
             item {
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp)),
                     shape = RoundedCornerShape(8.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainer
@@ -270,14 +276,15 @@ fun MinePage() {
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth()
-                        .padding(vertical = 8.dp),
+                        .clip(RoundedCornerShape(8.dp)),
                     shape = RoundedCornerShape(8.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainer
                     )
                 ) {
                     Column(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(vertical = 8.dp),
                     ) {
                         ListItem(
                             headlineContent = {
@@ -338,6 +345,38 @@ fun MinePage() {
                             modifier = Modifier
                                 .clickable {
                                     Toast.makeText(context, "更新日志", Toast.LENGTH_SHORT).show()
+                                },
+                            colors = ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            ),
+                        )
+                        ListItem(
+                            headlineContent = {
+                                Text(
+                                    text = stringResource(R.string.mine_thanks),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                )
+                            },
+                            leadingContent = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_thanks),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MaterialTheme.colorScheme.onSurface,
+                                )
+                            },
+                            trailingContent = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_arrow_right),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            },
+                            modifier = Modifier
+                                .clickable {
+                                    Toast.makeText(context, "特别鸣谢", Toast.LENGTH_SHORT).show()
                                 },
                             colors = ListItemDefaults.colors(
                                 containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -428,7 +467,7 @@ fun ActionCard(
     ) {
         Column(
             modifier = Modifier.fillMaxWidth()
-                .padding(16.dp),
+                .padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {

@@ -70,7 +70,6 @@ android {
 
     packaging {
         resources {
-            excludes += "DebugProbesKt.bin"
             excludes += "/META-INF/AL2.0"
             excludes += "/META-INF/LGPL2.1"
         }
@@ -84,6 +83,7 @@ fun getDateNumber(): Int {
 }
 
 dependencies {
+    implementation(libs.androidx.compose.animation.core)
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -91,12 +91,12 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.compose.ui)
-    debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 
     implementation(libs.lunar)
     implementation(libs.gsyvideoplayer.java)

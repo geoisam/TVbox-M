@@ -1,46 +1,70 @@
 package com.pjs.tvbox.activity
 
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.pjs.tvbox.ui.BottomNav
-import com.pjs.tvbox.ui.theme.ContrastAwareReplyTheme
+import com.pjs.tvbox.ui.*
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.R)
+    @OptIn(ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        try {
-            setContent {
-                ContrastAwareReplyTheme {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
-                    ) {
-                        BottomNav()
-                    }
-                }
+        enableEdgeToEdge()
+        setContent {
+            MaterialTheme {
+                MainScreen()
             }
-        } catch (e: Exception) {
-            Log.e("MainActivity", "Error in onCreate", e)
         }
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.R)
-@Preview(showBackground = true)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MainActivityPreview() {
-    ContrastAwareReplyTheme {
-        BottomNav()
+fun MainScreen() {
+    val tabs = listOf(Screen.Home, Screen.Live, Screen.Mine)
+    val pagerState = rememberPagerState(initialPage = 0) { tabs.size }
+    val coroutineScope = rememberCoroutineScope()
+    val currentRoute by remember { derivedStateOf { tabs[pagerState.currentPage].route } }
+
+    Scaffold(
+        bottomBar = {
+            BottomNav(
+                currentRoute = currentRoute,
+                onTabSelected = { screen ->
+                    val targetIndex = tabs.indexOf(screen)
+                    coroutineScope.launch {
+                        pagerState.scrollToPage(targetIndex)
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) { page ->
+            when (page) {
+                0 -> HomePage()
+                1 -> LivePage()
+                2 -> MinePage()
+            }
+        }
     }
 }
