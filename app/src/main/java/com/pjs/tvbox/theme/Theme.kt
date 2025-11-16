@@ -1,4 +1,4 @@
-package com.pjs.tvbox.ui.theme
+package com.pjs.tvbox.theme
 
 import android.app.Activity
 import android.app.UiModeManager

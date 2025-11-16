@@ -1,4 +1,4 @@
-package com.pjs.tvbox.ui
+package com.pjs.tvbox.view
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pjs.tvbox.R
-import com.pjs.tvbox.ui.theme.ContrastAwareReplyTheme
+import com.pjs.tvbox.theme.ContrastAwareReplyTheme
 import com.pjs.tvbox.util.LunarUtil
 import java.util.Calendar
 import kotlinx.coroutines.delay
@@ -78,15 +78,20 @@ fun MinePage() {
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                        .padding(horizontal = 8.dp, vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(
-                        text = stringResource(R.string.app_name),
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
+                    IconButton(onClick = {
+                        Toast.makeText(context, "帮助反馈", Toast.LENGTH_SHORT).show()
+                    }) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_help),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onSurface,
+                        )
+                    }
                     Row {
                         IconButton(onClick = {
                             Toast.makeText(context, "主题模式", Toast.LENGTH_SHORT).show()
@@ -152,12 +157,12 @@ fun MinePage() {
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
                                 Text(
-                                    text = dateState["yearMonth"] ?: "",
+                                    text = dateState["yearMonth"] ?: "2002 年 1 月",
                                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                                     color = MaterialTheme.colorScheme.onSurface,
                                 )
                                 Text(
-                                    text = dateState["shiChen"] ?: "",
+                                    text = dateState["shiChen"] ?: "时辰",
                                     style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                     color = MaterialTheme.colorScheme.onPrimary,
                                     modifier = Modifier
@@ -169,23 +174,24 @@ fun MinePage() {
                                 )
                             }
                             Text(
-                                text = dateState["week"] ?: "",
+                                text = dateState["week"] ?: "星期二",
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                                 color = MaterialTheme.colorScheme.onSurface,
                             )
                         }
                         Text(
-                            text = dateState["day"] ?: "",
+                            text = dateState["day"] ?: "29",
                             style = MaterialTheme.typography.displayLarge.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(vertical = 12.dp),
                         )
                         Text(
-                            text = dateState["monthDay"] ?: "",
+                            text = dateState["monthDay"] ?: "腊月十七",
                             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.onSurface,
                         )
                         Text(
-                            text = dateState["ganZhi"] ?: "",
+                            text = dateState["ganZhi"] ?: "辛巳蛇年 辛丑牛月 丁酉鸡日",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
@@ -197,7 +203,7 @@ fun MinePage() {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    ActionCard(
+                    MineCard(
                         iconRes = R.drawable.ic_star,
                         text = stringResource(R.string.mine_star),
                         onClick = {
@@ -206,7 +212,7 @@ fun MinePage() {
                         modifier = Modifier.weight(1f)
                             .clip(RoundedCornerShape(8.dp)),
                     )
-                    ActionCard(
+                    MineCard(
                         iconRes = R.drawable.ic_history,
                         text = stringResource(R.string.mine_history),
                         onClick = {
@@ -215,7 +221,7 @@ fun MinePage() {
                         modifier = Modifier.weight(1f)
                             .clip(RoundedCornerShape(8.dp)),
                     )
-                    ActionCard(
+                    MineCard(
                         iconRes = R.drawable.ic_download,
                         text = stringResource(R.string.mine_download),
                         onClick = {
@@ -238,7 +244,7 @@ fun MinePage() {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        ActionItem(
+                        MineItem(
                             iconRes = R.drawable.ic_subscribe,
                             text = stringResource(R.string.mine_subscribe),
                             onClick = {
@@ -246,7 +252,7 @@ fun MinePage() {
                             },
                             modifier = Modifier.weight(1f),
                         )
-                        ActionItem(
+                        MineItem(
                             iconRes = R.drawable.ic_media_link,
                             text = stringResource(R.string.mine_media_link),
                             onClick = {
@@ -254,7 +260,7 @@ fun MinePage() {
                             },
                             modifier = Modifier.weight(1f),
                         )
-                        ActionItem(
+                        MineItem(
                             iconRes = R.drawable.ic_video,
                             text = stringResource(R.string.mine_video),
                             onClick = {
@@ -262,7 +268,7 @@ fun MinePage() {
                             },
                             modifier = Modifier.weight(1f),
                         )
-                        ActionItem(
+                        MineItem(
                             iconRes = R.drawable.ic_transcode,
                             text = stringResource(R.string.mine_transcode),
                             onClick = {
@@ -426,12 +432,12 @@ fun MinePage() {
                 ) {
                     Text(
                         text = stringResource(R.string.app_name),
-                        style = MaterialTheme.typography.headlineLarge,
+                        style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.onSurface,
                     )
                     Text(
                         text = stringResource(R.string.app_version),
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 8.dp),
                     )
@@ -451,7 +457,7 @@ fun calculateTimeToNextHour(): Long {
 }
 
 @Composable
-fun ActionCard(
+fun MineCard(
     iconRes: Int,
     text: String,
     onClick: () -> Unit,
@@ -488,7 +494,7 @@ fun ActionCard(
 }
 
 @Composable
-fun ActionItem(
+fun MineItem(
     iconRes: Int,
     text: String,
     onClick: () -> Unit,

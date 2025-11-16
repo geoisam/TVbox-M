@@ -1,4 +1,4 @@
-package com.pjs.tvbox.ui.theme
+package com.pjs.tvbox.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

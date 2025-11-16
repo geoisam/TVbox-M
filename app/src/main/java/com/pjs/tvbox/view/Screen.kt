@@ -1,4 +1,4 @@
-package com.pjs.tvbox.ui
+package com.pjs.tvbox.view
 
 import com.pjs.tvbox.R
 

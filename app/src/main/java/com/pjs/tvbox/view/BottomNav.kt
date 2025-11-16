@@ -1,4 +1,4 @@
-package com.pjs.tvbox.ui
+package com.pjs.tvbox.view
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*
@@ -33,9 +33,9 @@ fun BottomNav(
                     Text(
                         text = stringResource(screen.titleResId),
                         style = if (currentRoute == screen.route) {
-                            MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+                            MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
                         } else {
-                            MaterialTheme.typography.labelSmall
+                            MaterialTheme.typography.labelMedium
                         }
                     )
                 },
