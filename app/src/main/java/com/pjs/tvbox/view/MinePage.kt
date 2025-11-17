@@ -78,13 +78,16 @@ fun MinePage() {
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                        .padding(horizontal = 18.dp, vertical = 18.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    IconButton(onClick = {
-                        Toast.makeText(context, "帮助反馈", Toast.LENGTH_SHORT).show()
-                    }) {
+                    Box(
+                        modifier = Modifier.padding(end = 8.dp)
+                            .clickable {
+                                Toast.makeText(context, "搜索", Toast.LENGTH_SHORT).show()
+                            },
+                        contentAlignment = Alignment.Center,
+                    ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_help),
                             contentDescription = null,
@@ -92,10 +95,15 @@ fun MinePage() {
                             tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
+                    Spacer(modifier = Modifier.weight(1f))
                     Row {
-                        IconButton(onClick = {
-                            Toast.makeText(context, "主题模式", Toast.LENGTH_SHORT).show()
-                        }) {
+                        Box(
+                            modifier = Modifier.padding(end = 8.dp)
+                                .clickable {
+                                    Toast.makeText(context, "主题", Toast.LENGTH_SHORT).show()
+                                },
+                            contentAlignment = Alignment.Center,
+                        ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_theme),
                                 contentDescription = null,
@@ -103,9 +111,13 @@ fun MinePage() {
                                 tint = MaterialTheme.colorScheme.onSurface,
                             )
                         }
-                        IconButton(onClick = {
-                            Toast.makeText(context, "设置", Toast.LENGTH_SHORT).show()
-                        }) {
+                        Box(
+                            modifier = Modifier.padding(start = 8.dp)
+                                .clickable {
+                                    Toast.makeText(context, "设置", Toast.LENGTH_SHORT).show()
+                                },
+                            contentAlignment = Alignment.Center,
+                        ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_setting),
                                 contentDescription = null,
@@ -124,7 +136,7 @@ fun MinePage() {
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = PaddingValues(
-                top = innerPadding.calculateTopPadding() + 16.dp,
+                top = innerPadding.calculateTopPadding() + 10.dp,
                 bottom = innerPadding.calculateBottomPadding() + 16.dp,
             )
         ) {
@@ -536,7 +548,7 @@ fun MinePagePreview() {
 
 @Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun MinePageDarkPreview() {
+private fun MinePageDarkPreview() {
     ContrastAwareReplyTheme {
         MinePage()
     }

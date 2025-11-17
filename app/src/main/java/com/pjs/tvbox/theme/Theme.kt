@@ -1,9 +1,11 @@
 package com.pjs.tvbox.theme
 
-import android.app.Activity
 import android.app.UiModeManager
 import android.content.Context
 import android.os.Build
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -13,6 +15,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -261,49 +264,54 @@ fun selectSchemeForContrast(isDark: Boolean): ColorScheme {
         val contrastLevel = uiModeManager.contrast
 
         colorScheme = when (contrastLevel) {
-            in 0.0f..0.33f -> if (isDark)
-                darkScheme else lightScheme
-
-            in 0.34f..0.66f -> if (isDark)
-                mediumContrastDarkColorScheme else mediumContrastLightColorScheme
-
-            in 0.67f..1.0f -> if (isDark)
-                highContrastDarkColorScheme else highContrastLightColorScheme
-
+            in 0.0f..0.33f -> if (isDark) darkScheme else lightScheme
+            in 0.34f..0.66f -> if (isDark) mediumContrastDarkColorScheme else mediumContrastLightColorScheme
+            in 0.67f..1.0f -> if (isDark) highContrastDarkColorScheme else highContrastLightColorScheme
             else -> if (isDark) darkScheme else lightScheme
         }
-        return colorScheme
-    } else return colorScheme
+    }
+    return colorScheme
 }
+
 @Composable
 fun ContrastAwareReplyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = false,
-    content:
-    @Composable
-        () -> Unit,
+    content: @Composable () -> Unit,
 ) {
     val replyColorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         else -> selectSchemeForContrast(darkTheme)
     }
+
     val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = replyColorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+    val context = view.context
+    val activity = context as ComponentActivity
+
+    SideEffect {
+        activity.enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT) { darkTheme },
+            navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT) { darkTheme }
+        )
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            @Suppress("DEPRECATION")
+            activity.window.statusBarColor = Color.Transparent.toArgb()
+            @Suppress("DEPRECATION")
+            activity.window.navigationBarColor = Color.Transparent.toArgb()
         }
+
+        WindowCompat.setDecorFitsSystemWindows(activity.window, false)
     }
 
     MaterialTheme(
         colorScheme = replyColorScheme,
         typography = replyTypography,
         shapes = shapes,
-        content = content,
-    )
+    ) {
+        content()
+    }
 }

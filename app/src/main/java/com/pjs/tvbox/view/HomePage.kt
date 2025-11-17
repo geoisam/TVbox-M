@@ -4,9 +4,11 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,7 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -48,15 +49,20 @@ fun HomePage() {
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                        .padding(horizontal = 18.dp, vertical = 18.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    IconButton(onClick = {
-                        Toast.makeText(context, "数据源", Toast.LENGTH_SHORT).show()
-                    }) {
+                    Row (
+                        modifier = Modifier
+                            .clickable {
+                                Toast.makeText(context, "数据源", Toast.LENGTH_SHORT).show()
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
                         Text(
-                            text = stringResource(R.string.nav_default),
+                            text = stringResource(R.string.nav_default).take(4).let {
+                                if (stringResource(R.string.nav_default).length > 4) "$it…" else it
+                            },
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.onSurface,
                         )
@@ -67,10 +73,15 @@ fun HomePage() {
                             tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
+                    Spacer(modifier = Modifier.weight(1f))
                     Row {
-                        IconButton(onClick = {
-                            Toast.makeText(context, "搜索", Toast.LENGTH_SHORT).show()
-                        }) {
+                        Box(
+                            modifier = Modifier.padding(end = 8.dp)
+                            .clickable {
+                                Toast.makeText(context, "搜索", Toast.LENGTH_SHORT).show()
+                            },
+                            contentAlignment = Alignment.Center,
+                            ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_search),
                                 contentDescription = null,
@@ -78,9 +89,13 @@ fun HomePage() {
                                 tint = MaterialTheme.colorScheme.onSurface,
                             )
                         }
-                        IconButton(onClick = {
-                            Toast.makeText(context, "更多", Toast.LENGTH_SHORT).show()
-                        }) {
+                        Box(
+                            modifier = Modifier.padding(start = 8.dp)
+                            .clickable {
+                                Toast.makeText(context, "更多", Toast.LENGTH_SHORT).show()
+                            },
+                            contentAlignment = Alignment.Center,
+                            ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_add),
                                 contentDescription = null,
@@ -99,7 +114,7 @@ fun HomePage() {
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = PaddingValues(
-                top = innerPadding.calculateTopPadding() + 16.dp,
+                top = innerPadding.calculateTopPadding() + 10.dp,
                 bottom = innerPadding.calculateBottomPadding() + 16.dp,
             )
         ) {
@@ -189,7 +204,15 @@ fun HomeCard(
 
 @Preview(showBackground = true)
 @Composable
-fun HomePagePreview() {
+private fun HomePagePreview() {
+    ContrastAwareReplyTheme {
+        HomePage()
+    }
+}
+
+@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun HomePageDarkPreview() {
     ContrastAwareReplyTheme {
         HomePage()
     }
