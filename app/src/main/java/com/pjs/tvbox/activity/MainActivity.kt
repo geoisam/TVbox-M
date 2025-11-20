@@ -17,7 +17,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import com.pjs.tvbox.view.*
+import com.pjs.tvbox.ui.page.BottomNav
+import com.pjs.tvbox.ui.page.HomePage
+import com.pjs.tvbox.ui.page.LivePage
+import com.pjs.tvbox.ui.page.MinePage
+import com.pjs.tvbox.ui.page.Screen
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {

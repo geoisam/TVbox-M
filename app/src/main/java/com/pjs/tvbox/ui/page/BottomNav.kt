@@ -1,4 +1,4 @@
-package com.pjs.tvbox.view
+package com.pjs.tvbox.ui.page
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*

@@ -1,5 +1,4 @@
-package com.pjs.tvbox.theme
-
+package com.pjs.tvbox.ui.theme
 import android.app.UiModeManager
 import android.content.Context
 import android.os.Build
@@ -9,10 +8,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
@@ -264,9 +263,15 @@ fun selectSchemeForContrast(isDark: Boolean): ColorScheme {
         val contrastLevel = uiModeManager.contrast
 
         colorScheme = when (contrastLevel) {
-            in 0.0f..0.33f -> if (isDark) darkScheme else lightScheme
-            in 0.34f..0.66f -> if (isDark) mediumContrastDarkColorScheme else mediumContrastLightColorScheme
-            in 0.67f..1.0f -> if (isDark) highContrastDarkColorScheme else highContrastLightColorScheme
+            in 0.0f..0.33f -> if (isDark)
+                darkScheme else lightScheme
+
+            in 0.34f..0.66f -> if (isDark)
+                mediumContrastDarkColorScheme else mediumContrastLightColorScheme
+
+            in 0.67f..1.0f -> if (isDark)
+                highContrastDarkColorScheme else highContrastLightColorScheme
+
             else -> if (isDark) darkScheme else lightScheme
         }
     }
@@ -274,12 +279,13 @@ fun selectSchemeForContrast(isDark: Boolean): ColorScheme {
 }
 
 @Composable
-fun ContrastAwareReplyTheme(
+fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
-    content: @Composable () -> Unit,
+    content: @Composable () -> Unit
 ) {
-    val replyColorScheme = when {
+    val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
@@ -307,11 +313,10 @@ fun ContrastAwareReplyTheme(
         WindowCompat.setDecorFitsSystemWindows(activity.window, false)
     }
 
-    MaterialTheme(
-        colorScheme = replyColorScheme,
-        typography = replyTypography,
-        shapes = shapes,
-    ) {
-        content()
-    }
+  MaterialTheme(
+    colorScheme = colorScheme,
+    typography = typography,
+    shapes = shapes,
+    content = content
+  )
 }

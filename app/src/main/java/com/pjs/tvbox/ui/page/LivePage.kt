@@ -1,5 +1,6 @@
-package com.pjs.tvbox.view
+package com.pjs.tvbox.ui.page
 
+import android.content.res.Configuration
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,10 +26,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Surface
-import androidx.media3.ui.PlayerView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.pjs.tvbox.theme.ContrastAwareReplyTheme
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.pjs.tvbox.ui.theme.AppTheme
 import com.pjs.tvbox.bean.LivePlayerBean
 
 private const val HLS_URL = "https://gcalic.v.myalicdn.com/gc/wgw05_1/index.m3u8?contentid=2820180516001"
@@ -42,7 +43,7 @@ fun LivePage(
     )
 ) {
     val context = LocalContext.current
-    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     val playerBean = remember(liveBean) {
         liveBean.apply {
@@ -57,7 +58,6 @@ fun LivePage(
         }
     }
 
-    ContrastAwareReplyTheme {
         Scaffold(
             topBar = {
                 Surface(
@@ -100,17 +100,16 @@ fun LivePage(
                 }
             },
             containerColor = MaterialTheme.colorScheme.surface,
-        ) {innerPadding ->
+        ) { innerPadding ->
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
                 contentPadding = PaddingValues(
-                    top = innerPadding.calculateTopPadding() + 10.dp,
+                    top = innerPadding.calculateTopPadding() + 0.dp,
                     bottom = innerPadding.calculateBottomPadding() + 16.dp,
                 )
-            ){
+            ) {
                 item {
                     Text(
                         text = liveBean.title,
@@ -120,21 +119,20 @@ fun LivePage(
                 }
             }
         }
-    }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun LivePagePreview() {
-    ContrastAwareReplyTheme {
+    AppTheme {
         LivePage()
     }
 }
 
-@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun LivePageDarkPreview() {
-    ContrastAwareReplyTheme {
+    AppTheme {
         LivePage()
     }
 }

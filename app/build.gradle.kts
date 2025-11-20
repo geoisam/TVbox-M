@@ -36,7 +36,7 @@ android {
         abortOnError = true
         checkReleaseBuilds = true
         baseline = file("lint-baseline.xml")
-        ignoreWarnings = true
+        // ignoreWarnings = true
     }
 
     buildTypes {
@@ -70,8 +70,7 @@ android {
 
     packaging {
         resources {
-            excludes += "/META-INF/AL2.0"
-            excludes += "/META-INF/LGPL2.1"
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
 }
