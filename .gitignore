@@ -41,3 +41,4 @@ Thumbs.db
 /app/debug/
 /app/release/
 local.properties
+lint-baseline.xml
