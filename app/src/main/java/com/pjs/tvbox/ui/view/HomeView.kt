@@ -1,0 +1,185 @@
+package com.pjs.tvbox.ui.view
+
+import android.content.Intent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import coil3.compose.SubcomposeAsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import com.pjs.tvbox.data.DouBanHotData
+import com.pjs.tvbox.model.Movie
+
+@Composable
+fun DBHotView(modifier: Modifier = Modifier) {
+    var movies by remember { mutableStateOf<List<Movie>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
+    var error by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(Unit) {
+        try {
+            movies = DouBanHotData.getHotMovies()
+        } catch (e: Exception) {
+            error = e.message ?: "未知错误"
+        } finally {
+            isLoading = false
+        }
+    }
+
+    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        when {
+            isLoading -> {
+                CircularProgressIndicator(strokeWidth = 4.dp)
+            }
+
+            error != null -> {
+                Text(
+                    text = "加载失败\n\n$error",
+                    color = Color.Gray,
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                )
+            }
+
+            movies.isEmpty() -> {
+                Text(
+                    text = "暂无数据",
+                    color = Color.Gray,
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                )
+            }
+
+            else -> {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(3),
+                    contentPadding = PaddingValues(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(movies, key = { it.id }) { movie ->
+                        MovieCard(movie = movie)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MovieCard(movie: Movie) {
+    val context = LocalContext.current
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(0.69f)
+            .clickable {
+                val url = movie.cover
+                val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+                context.startActivity(intent)
+            },
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Box {
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(context)
+                    .data(movie.cover)
+                    .crossfade(true)
+                    .build(),
+                loading = {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(strokeWidth = 4.dp)
+                    }
+                },
+                error = {
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(8.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("图片加载失败",
+                            color = Color.Gray,
+                            style = MaterialTheme.typography.labelSmall,
+                            )
+                    }
+                },
+                contentDescription = movie.title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(8.dp)),
+            )
+
+            movie.rating?.let { rating ->
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .background(
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.78f),
+                            RoundedCornerShape(bottomStart = 8.dp, topEnd = 8.dp)
+                        )
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = rating,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                }
+            }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .background(
+                        Color.Black.copy(alpha = 0.78f),
+                        RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
+                    )
+                    .padding(horizontal = 4.dp, vertical = 4.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = movie.title,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        }
+    }
+}

@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,10 +22,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.pjs.tvbox.R
-import com.pjs.tvbox.ui.theme.AppTheme
 import com.pjs.tvbox.util.LunarUtil
 import java.util.Calendar
 import kotlinx.coroutines.delay
@@ -586,21 +583,5 @@ fun MineItem(
                 textAlign = TextAlign.Center,
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MinePagePreview() {
-    AppTheme {
-        MinePage()
-    }
-}
-
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun MinePageDarkPreview() {
-    AppTheme {
-        MinePage()
     }
 }

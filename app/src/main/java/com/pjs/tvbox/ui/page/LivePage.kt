@@ -1,6 +1,5 @@
 package com.pjs.tvbox.ui.page
 
-import android.content.res.Configuration
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import android.view.SurfaceView
 import android.view.ViewGroup
@@ -29,7 +27,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.pjs.tvbox.ui.theme.AppTheme
 import com.pjs.tvbox.bean.LivePlayerBean
 
 private const val HLS_URL = "https://gcalic.v.myalicdn.com/gc/wgw05_1/index.m3u8?contentid=2820180516001"
@@ -119,20 +116,4 @@ fun LivePage(
                 }
             }
         }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun LivePagePreview() {
-    AppTheme {
-        LivePage()
-    }
-}
-
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun LivePageDarkPreview() {
-    AppTheme {
-        LivePage()
-    }
 }

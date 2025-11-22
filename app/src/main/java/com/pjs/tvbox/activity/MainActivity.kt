@@ -21,7 +21,7 @@ import com.pjs.tvbox.ui.page.BottomNav
 import com.pjs.tvbox.ui.page.HomePage
 import com.pjs.tvbox.ui.page.LivePage
 import com.pjs.tvbox.ui.page.MinePage
-import com.pjs.tvbox.ui.page.Screen
+import com.pjs.tvbox.ui.view.MainView
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainScreen() {
-    val tabs = listOf(Screen.Home, Screen.Live, Screen.Mine)
+    val tabs = listOf(MainView.Main, MainView.Live, MainView.Mine)
     val pagerState = rememberPagerState(initialPage = 0) { tabs.size }
     val coroutineScope = rememberCoroutineScope()
     val currentRoute by remember { derivedStateOf { tabs[pagerState.currentPage].route } }

@@ -1,4 +1,3 @@
-// com.pjs.tvbox.activity.SplashActivity.kt
 package com.pjs.tvbox.activity
 
 import android.content.Intent
