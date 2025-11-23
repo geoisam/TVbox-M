@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TVbox M</string>
-    <string name="app_version">v1.0.0 (20251225)</string>
+    <string name="app_version">v1.0.0_20251225_release</string>
     <string name="nav_home">首页</string>
     <string name="nav_live">直播</string>
     <string name="nav_mine">我的</string>
-    <string name="nav_default">默认</string>
+    <string name="nav_default">暂无订阅</string>
     <string name="nav_refresh">刷新</string>
     <string name="nav_search">搜索</string>
     <string name="nav_add">更多</string>
@@ -27,10 +27,10 @@
     <string name="mine_update">检测更新</string>
     <string name="mine_change">更新日志</string>
     <string name="mine_thanks">特别鸣谢</string>
-    <string name="mine_sponsor">赞赏</string>
+    <string name="mine_sponsor">赞赏支持</string>
     <string name="mine_about">关于</string>
-    <string name="about_name">TVbox-M</string>
+    <string name="about_name">GitHub</string>
     <string name="about_url">github.com/geoisam/TVbox-M</string>
     <string name="LICENSE">AGPL v3</string>
-    <string name="about_desc">本软件一直为 开源免费 使用，如果你是从某些地方买的话，你就是被骗了！\n\n本软件不收集或上传任何数据，只提供展示功能，不参与任何订阅源的制作、收集和发布。开发者不对任何订阅内容负责，用户需自行承担使用本软件的风险和责任。\n\n本软件仅用于个人学习和参考，请勿传播，安装后请于24小时内删除。</string>
+    <string name="about_desc">欢迎使用 TVbox M 软件（以下简称“本软件”）。\n\n本软件一直为 开源免费 使用，如果你是从某些地方买的话，你就是被骗了！\n\n本软件不收集或上传任何数据，只提供展示功能，不参与任何订阅源的制作、收集和发布。开发者不对任何订阅内容负责，用户需自行承担使用本软件的风险和责任。\n\n本软件仅用于个人学习和参考，请勿传播，安装后请于24小时内删除。</string>
 </resources>

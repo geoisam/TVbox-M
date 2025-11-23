@@ -100,12 +100,14 @@ fun LivePage(
         ) { innerPadding ->
             LazyColumn(
                 modifier = Modifier
+                    .fillMaxWidth()
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
                 contentPadding = PaddingValues(
                     top = innerPadding.calculateTopPadding() + 0.dp,
                     bottom = innerPadding.calculateBottomPadding() + 16.dp,
-                )
+                ),
             ) {
                 item {
                     Text(

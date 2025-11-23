@@ -33,9 +33,6 @@ import kotlinx.coroutines.delay
 fun MinePage() {
     val context = LocalContext.current
     val dateState = remember { mutableStateMapOf<String, String>() }
-    var showChangePage by remember { mutableStateOf(false) }
-    var showThanksPage by remember { mutableStateOf(false) }
-    var showSponsorPage by remember { mutableStateOf(false) }
     var showAboutPage by remember { mutableStateOf(false) }
 
     fun updateDateState() {
@@ -342,102 +339,6 @@ fun MinePage() {
                             ListItem(
                                 headlineContent = {
                                     Text(
-                                        text = stringResource(R.string.mine_change),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                    )
-                                },
-                                leadingContent = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_change),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp),
-                                        tint = MaterialTheme.colorScheme.onSurface,
-                                    )
-                                },
-                                trailingContent = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_arrow_right),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    )
-                                },
-                                modifier = Modifier
-                                    .clickable {
-                                        showChangePage = true
-                                    },
-                                colors = ListItemDefaults.colors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                                ),
-                            )
-                            ListItem(
-                                headlineContent = {
-                                    Text(
-                                        text = stringResource(R.string.mine_thanks),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                    )
-                                },
-                                leadingContent = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_thanks),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp),
-                                        tint = MaterialTheme.colorScheme.onSurface,
-                                    )
-                                },
-                                trailingContent = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_arrow_right),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    )
-                                },
-                                modifier = Modifier
-                                    .clickable {
-                                        showThanksPage = true
-                                    },
-                                colors = ListItemDefaults.colors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                                ),
-                            )
-                            ListItem(
-                                headlineContent = {
-                                    Text(
-                                        text = stringResource(R.string.mine_sponsor),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                    )
-                                },
-                                leadingContent = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_sponsor),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp),
-                                        tint = MaterialTheme.colorScheme.onSurface,
-                                    )
-                                },
-                                trailingContent = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_arrow_right),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    )
-                                },
-                                modifier = Modifier
-                                    .clickable {
-                                        showSponsorPage = true
-                                    },
-                                colors = ListItemDefaults.colors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                                ),
-                            )
-                            ListItem(
-                                headlineContent = {
-                                    Text(
                                         text = stringResource(R.string.mine_about),
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurface,
@@ -467,39 +368,10 @@ fun MinePage() {
                                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                                 )
                             )
-                            if (showChangePage) {
-                                ChangePage(onDismiss = { showChangePage = false })
-                            }
-                            if (showThanksPage) {
-                                ThanksPage(onDismiss = { showThanksPage = false })
-                            }
-                            if (showSponsorPage) {
-                                SponsorPage(onDismiss = { showSponsorPage = false })
-                            }
                             if (showAboutPage) {
                                 AboutPage(onDismiss = { showAboutPage = false })
                             }
                         }
-                    }
-                }
-                item {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Text(
-                            text = stringResource(R.string.app_name),
-                            style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
-                            color = MaterialTheme.colorScheme.onSurface,
-                        )
-                        Text(
-                            text = stringResource(R.string.app_version),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(top = 8.dp),
-                        )
                     }
                 }
             }

@@ -65,7 +65,6 @@ android {
 
     buildFeatures {
         compose = true
-        viewBinding = true
     }
 
     packaging {
@@ -73,12 +72,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-}
-
-fun getDateNumber(): Int {
-    val currentDate = LocalDate.now()
-    val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
-    return currentDate.format(formatter).toInt()
 }
 
 dependencies {
@@ -120,4 +113,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
+}
+
+fun getDateNumber(): Int {
+    val currentDate = LocalDate.now()
+    val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+    return currentDate.format(formatter).toInt()
 }

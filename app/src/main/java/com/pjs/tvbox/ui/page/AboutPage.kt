@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -29,6 +30,9 @@ fun AboutPage(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    var showChangePage by remember { mutableStateOf(false) }
+    var showThanksPage by remember { mutableStateOf(false) }
+    var showSponsorPage by remember { mutableStateOf(false) }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -64,13 +68,44 @@ fun AboutPage(
                 )
             }
         }
-
         LazyColumn(
             modifier = Modifier.fillMaxWidth()
-                .padding(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 16.dp)
+                .padding(start = 16.dp, top = 12.dp, end = 16.dp, bottom = 32.dp)
                 .weight(1f, fill = false),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_logo_fill),
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(88.dp)
+                            .padding(6.dp)
+                            .background(
+                                Color.Black,
+                                RoundedCornerShape(19.dp)
+                            ),
+                    )
+                    Text(
+                        text = stringResource(R.string.app_name),
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Text(
+                        text = stringResource(R.string.app_version),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth()
@@ -93,23 +128,23 @@ fun AboutPage(
                         Image(
                             painter = painterResource(R.drawable.ic_github),
                             contentDescription = null,
-                            modifier = Modifier.size(64.dp),
+                            modifier = Modifier.size(56.dp),
                         )
                         Column(
                             modifier = Modifier.weight(1f)
-                                .padding(horizontal = 8.dp),
+                                .padding(horizontal = 12.dp),
                         ) {
                             Text(
                                 text = stringResource(R.string.about_name),
                                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                                 color = MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier.padding(vertical = 4.dp),
+                                modifier = Modifier.padding(top = 4.dp, bottom = 2.dp),
                             )
                             Text(
                                 text = stringResource(R.string.about_url),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(vertical = 4.dp),
+                                modifier = Modifier.padding(top = 2.dp, bottom = 4.dp),
                                 maxLines = 1,
                             )
                         }
@@ -124,6 +159,103 @@ fun AboutPage(
                                 )
                                 .padding(horizontal = 8.dp, vertical = 4.dp),
                         )
+                    }
+                }
+            }
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp)),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                    ) {
+                        ListItem(
+                            headlineContent = {
+                                Text(
+                                    text = stringResource(R.string.mine_change),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                )
+                            },
+                            trailingContent = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_arrow_right),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            },
+                            modifier = Modifier
+                                .clickable {
+                                    showChangePage = true
+                                },
+                            colors = ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            ),
+                        )
+                        ListItem(
+                            headlineContent = {
+                                Text(
+                                    text = stringResource(R.string.mine_thanks),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                )
+                            },
+                            trailingContent = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_arrow_right),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            },
+                            modifier = Modifier
+                                .clickable {
+                                    showThanksPage = true
+                                },
+                            colors = ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            ),
+                        )
+                        ListItem(
+                            headlineContent = {
+                                Text(
+                                    text = stringResource(R.string.mine_sponsor),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                )
+                            },
+                            trailingContent = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_arrow_right),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            },
+                            modifier = Modifier
+                                .clickable {
+                                    showSponsorPage = true
+                                },
+                            colors = ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            ),
+                        )
+                        if (showChangePage) {
+                            ChangePage(onDismiss = { showChangePage = false })
+                        }
+                        if (showThanksPage) {
+                            ThanksPage(onDismiss = { showThanksPage = false })
+                        }
+                        if (showSponsorPage) {
+                            SponsorPage(onDismiss = { showSponsorPage = false })
+                        }
                     }
                 }
             }
@@ -150,6 +282,5 @@ fun AboutPage(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }
