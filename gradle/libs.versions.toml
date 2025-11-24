@@ -17,6 +17,7 @@ androidx-lifecycle = "2.9.4"
 cn-lunar = "1.7.7"
 com-squareup-okhttp3 = "5.3.2"
 io-coil3 = "3.3.0"
+org-commonmark = "0.27.0"
 org-jetbrains-kotlinx = "1.9.0"
 androidx-media3 = "1.8.0"
 desugar-jdk-libs = "2.1.5"
@@ -45,6 +46,10 @@ cn-lunar = { module = "cn.6tail:lunar", version.ref = "cn-lunar" }
 com-squareup-okhttp3 = { module = "com.squareup.okhttp3:okhttp", version.ref = "com-squareup-okhttp3" }
 io-coil3-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "io-coil3" }
 io-coil3-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "io-coil3" }
+org-commonmark = { module = "org.commonmark:commonmark", version.ref = "org-commonmark" }
+org-commonmark-ext-tables = { module = "org.commonmark:commonmark-ext-gfm-tables", version.ref = "org-commonmark" }
+org-commonmark-ext-strikethrough = { module = "org.commonmark:commonmark-ext-gfm-strikethrough", version.ref = "org-commonmark" }
+org-commonmark-ext-ins = { module = "org.commonmark:commonmark-ext-ins", version.ref = "org-commonmark" }
 org-jetbrains-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "org-jetbrains-kotlinx" }
 androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "androidx-media3" }
 androidx-media3-exoplayer-hls = { module = "androidx.media3:media3-exoplayer-hls", version.ref = "androidx-media3" }

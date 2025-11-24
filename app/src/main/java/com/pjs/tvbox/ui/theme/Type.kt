@@ -6,6 +6,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 val typography = Typography(
+    displayLarge = TextStyle(
+        fontWeight = FontWeight.Light,
+        fontSize = 57.sp,
+        lineHeight = 64.sp,
+        letterSpacing = 0.sp,
+    ),
+    displayMedium = TextStyle(
+        fontWeight = FontWeight.Light,
+        fontSize = 45.sp,
+        lineHeight = 52.sp,
+        letterSpacing = 0.sp,
+    ),
+    displaySmall = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 36.sp,
+        lineHeight = 44.sp,
+        letterSpacing = 0.sp,
+    ),
     headlineLarge = TextStyle(
         fontWeight = FontWeight.SemiBold,
         fontSize = 32.sp,

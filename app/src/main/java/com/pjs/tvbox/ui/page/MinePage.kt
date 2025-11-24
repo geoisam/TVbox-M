@@ -24,16 +24,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pjs.tvbox.R
+import com.pjs.tvbox.activity.OverlayPage
 import com.pjs.tvbox.util.LunarUtil
 import java.util.Calendar
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MinePage() {
+fun MinePage(
+    onOpenPage: (OverlayPage) -> Unit
+) {
     val context = LocalContext.current
     val dateState = remember { mutableStateMapOf<String, String>() }
-    var showAboutPage by remember { mutableStateOf(false) }
 
     fun updateDateState() {
         dateState["yearMonth"] = LunarUtil.getYearMonth()
@@ -320,11 +322,10 @@ fun MinePage() {
                                     )
                                 },
                                 trailingContent = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_arrow_right),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    Text(
+                                        text = "已是最新版本",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                 },
                                 modifier = Modifier
@@ -353,24 +354,20 @@ fun MinePage() {
                                     )
                                 },
                                 trailingContent = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_arrow_right),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp),
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    Text(
+                                        text = stringResource(R.string.mine_mail),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
                                 },
                                 modifier = Modifier
                                     .clickable {
-                                        showAboutPage = true
+                                        onOpenPage(OverlayPage.About)
                                     },
                                 colors = ListItemDefaults.colors(
                                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                                 )
                             )
-                            if (showAboutPage) {
-                                AboutPage(onDismiss = { showAboutPage = false })
-                            }
                         }
                     }
                 }

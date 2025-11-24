@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -14,9 +15,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.pjs.tvbox.ui.page.AboutPage
 import com.pjs.tvbox.ui.page.BottomNav
 import com.pjs.tvbox.ui.page.HomePage
 import com.pjs.tvbox.ui.page.LivePage
@@ -40,35 +44,48 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainScreen() {
-    val tabs = listOf(MainView.Main, MainView.Live, MainView.Mine)
-    val pagerState = rememberPagerState(initialPage = 0) { tabs.size }
-    val coroutineScope = rememberCoroutineScope()
-    val currentRoute by remember { derivedStateOf { tabs[pagerState.currentPage].route } }
+    var overlayPage by remember { mutableStateOf<OverlayPage?>(null) }
 
-    Scaffold(
-        bottomBar = {
-            BottomNav(
-                currentRoute = currentRoute,
-                onTabSelected = { screen ->
-                    val targetIndex = tabs.indexOf(screen)
-                    coroutineScope.launch {
-                        pagerState.scrollToPage(targetIndex)
+    Box(modifier = Modifier.fillMaxSize()) {
+        val tabs = listOf(MainView.Main, MainView.Live, MainView.Mine)
+        val pagerState = rememberPagerState(initialPage = 0) { tabs.size }
+        val coroutineScope = rememberCoroutineScope()
+        val currentRoute by remember { derivedStateOf { tabs[pagerState.currentPage].route } }
+
+        Scaffold(
+            bottomBar = {
+                BottomNav(
+                    currentRoute = currentRoute,
+                    onTabSelected = { screen ->
+                        val targetIndex = tabs.indexOf(screen)
+                        coroutineScope.launch {
+                            pagerState.scrollToPage(targetIndex)
+                        }
                     }
+                )
+            }
+        ) { innerPadding ->
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) { page ->
+                when (page) {
+                    0 -> HomePage()
+                    1 -> LivePage()
+                    2 -> MinePage(onOpenPage = { overlayPage = it })
                 }
-            )
+            }
         }
-    ) { innerPadding ->
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) { page ->
+        overlayPage?.let { page ->
             when (page) {
-                0 -> HomePage()
-                1 -> LivePage()
-                2 -> MinePage()
+                is OverlayPage.About -> AboutPage { overlayPage = null }
             }
         }
     }
+}
+
+sealed class OverlayPage {
+    object About : OverlayPage()
 }

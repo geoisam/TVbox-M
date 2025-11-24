@@ -29,7 +29,7 @@ fun HomePage() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 18.dp, vertical = 18.dp),
+                    .padding(18.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(

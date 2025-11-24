@@ -204,7 +204,7 @@ fun MovieCard(movie: Movie) {
         Box {
             SubcomposeAsyncImage(
                 model = ImageRequest.Builder(context)
-                    .data("https://images.weserv.nl/?url=" + movie.cover)
+                    .data(movie.cover)
                     .crossfade(true)
                     .build(),
                 loading = {

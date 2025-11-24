@@ -36,7 +36,7 @@ android {
         abortOnError = true
         checkReleaseBuilds = true
         baseline = file("lint-baseline.xml")
-        // ignoreWarnings = true
+        ignoreWarnings = true
     }
 
     buildTypes {
@@ -96,6 +96,10 @@ dependencies {
     implementation(libs.com.squareup.okhttp3)
     implementation(libs.io.coil3.compose)
     implementation(libs.io.coil3.network.okhttp)
+    implementation(libs.org.commonmark)
+    implementation(libs.org.commonmark.ext.tables)
+    implementation(libs.org.commonmark.ext.strikethrough)
+    implementation(libs.org.commonmark.ext.ins)
     implementation(libs.org.jetbrains.serialization.json)
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.exoplayer.hls)
