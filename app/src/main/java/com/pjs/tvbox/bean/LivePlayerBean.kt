@@ -56,6 +56,7 @@ class LivePlayerBean(
             }
         })
     }
+
     fun getExoPlayer(): ExoPlayer? = exoPlayer
 
     fun releasePlayer() {

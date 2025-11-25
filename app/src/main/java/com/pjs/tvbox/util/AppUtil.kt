@@ -5,7 +5,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
 
-object AppUtil{
+object AppUtil {
     fun getVersionName(context: Context): String {
         val appVersionName = getPackageInfo(context)?.versionName
         return appVersionName.toString()

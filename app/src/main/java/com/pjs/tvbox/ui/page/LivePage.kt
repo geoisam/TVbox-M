@@ -19,50 +19,41 @@ import androidx.compose.ui.viewinterop.AndroidView
 import android.view.SurfaceView
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Surface
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.pjs.tvbox.bean.LivePlayerBean
 
-private const val HLS_URL = "https://gcalic.v.myalicdn.com/gc/wgw05_1/index.m3u8?contentid=2820180516001"
+private const val HLS_URL =
+    "https://gcalic.v.myalicdn.com/gc/wgw05_1/index.m3u8?contentid=2820180516001"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LivePage(
-    liveBean: LivePlayerBean = LivePlayerBean(
-        title = "直播测试",
-        url = HLS_URL
-    )
-) {
+fun LivePage() {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val playerBean = remember { LivePlayerBean(title = "直播测试", url = HLS_URL) }
 
-    val playerBean = remember(liveBean) {
-        liveBean.apply {
-            initPlayer(context)
-            bindLifecycle(lifecycleOwner)
-        }
-    }
+    DisposableEffect(Unit) {
+        playerBean.initPlayer(context)
+        playerBean.bindLifecycle(lifecycleOwner)
 
-    DisposableEffect(playerBean) {
         onDispose {
             playerBean.releasePlayer()
         }
     }
 
-        Scaffold(
-            topBar = {
-                Surface(
-                    color = MaterialTheme.colorScheme.surface,
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
                     Box(
                         modifier = Modifier
+                            .fillMaxWidth()
                             .size(250.dp)
                             .focusable()
                             .padding(start = 0.dp, end = 0.dp, top = 0.dp),
@@ -94,28 +85,25 @@ fun LivePage(
                             )
                         }
                     }
-                }
-            },
-            containerColor = MaterialTheme.colorScheme.surface,
-        ) { innerPadding ->
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                contentPadding = PaddingValues(
-                    top = innerPadding.calculateTopPadding() + 0.dp,
-                    bottom = innerPadding.calculateBottomPadding() + 16.dp,
-                ),
-            ) {
-                item {
-                    Text(
-                        text = liveBean.title,
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                }
+                },
+            )
+        },
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxSize()
+                .padding(padding),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            item {
+                Text(
+                    text = playerBean.title,
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
             }
         }
+    }
 }

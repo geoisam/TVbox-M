@@ -17,10 +17,11 @@ object DouBanHotData {
         coerceInputValues = true
         isLenient = true
     }
+
     suspend fun getHotMovies(): List<Movie> = runCatching {
         val response = PJS.request(
             PJSRequest(
-                url = "https://m.douban.com/rexxar/api/v2/subject/recent_hot/movie?start=0&count=20",
+                url = "https://m.douban.com/rexxar/api/v2/subject/recent_hot/movie?start=0&limit=12",
                 headers = mapOf("Referer" to "https://movie.douban.com/")
             )
         )
@@ -55,7 +56,7 @@ object DouBanHotData {
     }
 
     private fun JsonObject.toMovie(): Movie? = runCatching {
-        val rawCover      = this["pic"]?.jsonObject?.get("normal")?.jsonPrimitive?.content.orEmpty()
+        val rawCover = this["pic"]?.jsonObject?.get("normal")?.jsonPrimitive?.content.orEmpty()
         val rawCoverLarge = this["pic"]?.jsonObject?.get("large")?.jsonPrimitive?.content.orEmpty()
 
         Movie(

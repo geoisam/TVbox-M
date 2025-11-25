@@ -3,13 +3,11 @@ package com.pjs.tvbox.ui.page
 import android.graphics.drawable.ColorDrawable
 import android.text.method.LinkMovementMethod
 import android.widget.TextView
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import coil3.compose.LocalPlatformContext
@@ -43,6 +42,8 @@ fun MarkdownPage(
     assetFile: String,
     onBack: () -> Unit = {}
 ) {
+    BackHandler(onBack = onBack)
+
     val context = LocalContext.current
     val platformContext = LocalPlatformContext.current
     val imageLoader = remember { ImageLoader(platformContext) }
@@ -90,8 +91,9 @@ fun MarkdownPage(
                     Text(
                         text = pageTitle,
                         style = MaterialTheme.typography.titleMedium,
-                )
-                        },
+                        fontWeight = FontWeight.Bold,
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
@@ -112,11 +114,10 @@ fun MarkdownPage(
                     setTextIsSelectable(true)
                 }
             },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 16.dp)
-                .padding(top = 12.dp, bottom = 32.dp)
-                .verticalScroll(rememberScrollState()),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             update = { textView ->
                 textView.text = android.text.Html.fromHtml(
                     html,

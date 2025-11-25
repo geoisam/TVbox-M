@@ -32,7 +32,8 @@ object PJS {
         .writeTimeout(30, TimeUnit.SECONDS)
         .build()
 
-    private const val DEFAULT_UA = "Mozilla/5.0 (Linux; Android 16; MCE16 Build/BP3A.250905.014; ) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/123.0.0.0 Mobile Safari/537.36 EdgA/123.0.2420.102"
+    private const val DEFAULT_UA =
+        "Mozilla/5.0 (Linux; Android 16; MCE16 Build/BP3A.250905.014; ) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/123.0.0.0 Mobile Safari/537.36 EdgA/123.0.2420.102"
 
     suspend fun request(details: PJSRequest): PJSResponse = suspendCancellableCoroutine { cont ->
         val requestBody = details.data.toRequestBody(details.headers)
@@ -46,7 +47,9 @@ object PJS {
         val request = Request.Builder()
             .url(details.url)
             .headers(headers.toHeaders())
-            .method(details.method.uppercase(), requestBody?.takeIf { details.method.uppercase() !in setOf("GET", "HEAD") })
+            .method(
+                details.method.uppercase(),
+                requestBody?.takeIf { details.method.uppercase() !in setOf("GET", "HEAD") })
             .build()
 
         val call = details.timeout?.let {
@@ -60,7 +63,14 @@ object PJS {
 
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                cont.resume(PJSResponse(0, e.message ?: "Network error", responseText = "", response = null))
+                cont.resume(
+                    PJSResponse(
+                        0,
+                        e.message ?: "Network error",
+                        responseText = "",
+                        response = null
+                    )
+                )
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -71,11 +81,16 @@ object PJS {
                     val parsed = try {
                         when (details.responseType?.lowercase()) {
                             "", "text", null -> bodyString
-                            "json" -> if (bodyString.isBlank()) null else json.decodeFromString<Any>(bodyString)
+                            "json" -> if (bodyString.isBlank()) null else json.decodeFromString<Any>(
+                                bodyString
+                            )
+
                             "arraybuffer", "blob" -> bodyBytes.toByteArray()
                             else -> bodyString
                         }
-                    } catch (_: Exception) { null }
+                    } catch (_: Exception) {
+                        null
+                    }
 
                     cont.resume(
                         PJSResponse(
@@ -100,17 +115,24 @@ object PJS {
         is Map<*, *> -> FormBody.Builder().apply {
             this@toRequestBody.forEach { (k, v) -> add(k.toString(), v.toString()) }
         }.build()
+
         is Collection<*> -> MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .apply {
                 this@toRequestBody.forEachIndexed { i, item ->
                     when (item) {
                         is File -> addFormDataPart("file$i", item.name, item.asRequestBody())
-                        is ByteArray -> addFormDataPart("file$i", "file$i.bin", item.toRequestBody("application/octet-stream".toMediaType()))
+                        is ByteArray -> addFormDataPart(
+                            "file$i",
+                            "file$i.bin",
+                            item.toRequestBody("application/octet-stream".toMediaType())
+                        )
+
                         else -> addFormDataPart("field$i", item.toString())
                     }
                 }
             }.build()
+
         is Array<*> -> this.toList().toRequestBody(extraHeaders)
         else -> json.encodeToString(this).toRequestBody("application/json".toMediaType())
     }

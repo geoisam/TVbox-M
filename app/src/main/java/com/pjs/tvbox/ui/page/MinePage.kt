@@ -10,7 +10,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -56,7 +55,7 @@ fun MinePage(
 
     DisposableEffect(Unit) {
         val receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
+            override fun onReceive(c: Context?, intent: Intent?) {
                 updateDateState()
             }
         }
@@ -67,312 +66,298 @@ fun MinePage(
         }
         context.registerReceiver(receiver, filter)
         onDispose {
-            context.unregisterReceiver(receiver)
+            try {
+                context.unregisterReceiver(receiver)
+            } catch (e: Exception) {
+            }
         }
     }
 
-        Scaffold(
-            topBar = {
-                Surface(
-                    color = MaterialTheme.colorScheme.surface,
-                    modifier = Modifier.fillMaxWidth(),
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {},
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            Toast.makeText(context, "帮助", Toast.LENGTH_SHORT).show()
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_help),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            Toast.makeText(context, "主题", Toast.LENGTH_SHORT).show()
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_shirt),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            Toast.makeText(context, "设置", Toast.LENGTH_SHORT).show()
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_settings),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                        )
+                    }
+                }
+            )
+        },
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(MaterialTheme.shapes.small)
+                        .clickable {
+                            updateDateState()
+                            Toast.makeText(context, "日历时间已更新", Toast.LENGTH_SHORT).show()
+                        },
+                    shape = MaterialTheme.shapes.small,
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    )
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(18.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Box(
-                            modifier = Modifier.padding(end = 8.dp)
-                                .clickable {
-                                    Toast.makeText(context, "搜索", Toast.LENGTH_SHORT).show()
-                                },
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_help),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp),
-                                tint = MaterialTheme.colorScheme.onSurface,
-                            )
-                        }
-                        Spacer(modifier = Modifier.weight(1f))
-                        Row {
-                            Box(
-                                modifier = Modifier.padding(end = 8.dp)
-                                    .clickable {
-                                        Toast.makeText(context, "主题", Toast.LENGTH_SHORT).show()
-                                    },
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_theme),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(24.dp),
-                                    tint = MaterialTheme.colorScheme.onSurface,
-                                )
-                            }
-                            Box(
-                                modifier = Modifier.padding(start = 8.dp)
-                                    .clickable {
-                                        Toast.makeText(context, "设置", Toast.LENGTH_SHORT).show()
-                                    },
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_setting),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(24.dp),
-                                    tint = MaterialTheme.colorScheme.onSurface,
-                                )
-                            }
-                        }
-                    }
-                }
-            },
-            containerColor = MaterialTheme.colorScheme.surface,
-        ) { innerPadding ->
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(
-                    top = innerPadding.calculateTopPadding() + 12.dp,
-                    bottom = innerPadding.calculateBottomPadding() + 16.dp,
-                )
-            ) {
-                item {
-                    Card(
-                        modifier = Modifier.fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
-                            .clickable {
-                                updateDateState()
-                                Toast.makeText(context, "日历时间已更新", Toast.LENGTH_SHORT).show()
-                            },
-                        shape = RoundedCornerShape(8.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(8.dp),
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                ) {
-                                    Text(
-                                        text = dateState["yearMonth"] ?: "2002 年 1 月",
-                                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                    )
-                                    Text(
-                                        text = dateState["shiChen"] ?: "时辰",
-                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                        color = MaterialTheme.colorScheme.onPrimary,
-                                        modifier = Modifier
-                                            .background(
-                                                MaterialTheme.colorScheme.primary,
-                                                RoundedCornerShape(12.dp),
-                                            )
-                                            .padding(horizontal = 8.dp, vertical = 4.dp),
-                                    )
-                                }
-                                Text(
-                                    text = dateState["week"] ?: "星期二",
-                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                )
-                            }
-                            Text(
-                                text = dateState["day"] ?: "29",
-                                style = MaterialTheme.typography.displayLarge.copy(fontWeight = FontWeight.Bold),
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(vertical = 12.dp),
-                            )
-                            Text(
-                                text = dateState["monthDay"] ?: "腊月十七",
-                                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                                color = MaterialTheme.colorScheme.onSurface,
-                            )
-                            Text(
-                                text = dateState["ganZhi"] ?: "辛巳蛇年 辛丑牛月 丁酉鸡日",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
-                    }
-                }
-                item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        MineCard(
-                            iconRes = R.drawable.ic_star,
-                            text = stringResource(R.string.mine_star),
-                            onClick = {
-                                Toast.makeText(context, "收藏", Toast.LENGTH_SHORT).show()
-                            },
-                            modifier = Modifier.weight(1f)
-                                .clip(RoundedCornerShape(8.dp)),
-                        )
-                        MineCard(
-                            iconRes = R.drawable.ic_history,
-                            text = stringResource(R.string.mine_history),
-                            onClick = {
-                                Toast.makeText(context, "观看历史", Toast.LENGTH_SHORT).show()
-                            },
-                            modifier = Modifier.weight(1f)
-                                .clip(RoundedCornerShape(8.dp)),
-                        )
-                        MineCard(
-                            iconRes = R.drawable.ic_download,
-                            text = stringResource(R.string.mine_download),
-                            onClick = {
-                                Toast.makeText(context, "下载缓存", Toast.LENGTH_SHORT).show()
-                            },
-                            modifier = Modifier.weight(1f)
-                                .clip(RoundedCornerShape(8.dp)),
-                        )
-                    }
-                }
-                item {
-                    Card(
-                        modifier = Modifier.fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp)),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainer
-                        )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            MineItem(
-                                iconRes = R.drawable.ic_subscribe,
-                                text = stringResource(R.string.mine_subscribe),
-                                onClick = {
-                                    Toast.makeText(context, "订阅管理", Toast.LENGTH_SHORT).show()
-                                },
-                                modifier = Modifier.weight(1f),
-                            )
-                            MineItem(
-                                iconRes = R.drawable.ic_media_link,
-                                text = stringResource(R.string.mine_media_link),
-                                onClick = {
-                                    Toast.makeText(context, "播放链接", Toast.LENGTH_SHORT).show()
-                                },
-                                modifier = Modifier.weight(1f),
-                            )
-                            MineItem(
-                                iconRes = R.drawable.ic_video,
-                                text = stringResource(R.string.mine_video),
-                                onClick = {
-                                    Toast.makeText(context, "本地视频", Toast.LENGTH_SHORT).show()
-                                },
-                                modifier = Modifier.weight(1f),
-                            )
-                            MineItem(
-                                iconRes = R.drawable.ic_transcode,
-                                text = stringResource(R.string.mine_transcode),
-                                onClick = {
-                                    Toast.makeText(context, "视频转码", Toast.LENGTH_SHORT).show()
-                                },
-                                modifier = Modifier.weight(1f),
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                Text(
+                                    text = dateState["yearMonth"] ?: "2002 年 1 月",
+                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                )
+                                Text(
+                                    text = dateState["shiChen"] ?: "时辰",
+                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    modifier = Modifier
+                                        .background(
+                                            MaterialTheme.colorScheme.primary,
+                                            MaterialTheme.shapes.medium,
+                                        )
+                                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                                )
+                            }
+                            Text(
+                                text = dateState["week"] ?: "星期二",
+                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                color = MaterialTheme.colorScheme.onSurface,
                             )
                         }
+                        Text(
+                            text = dateState["day"] ?: "29",
+                            style = MaterialTheme.typography.displayLarge.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(vertical = 12.dp),
+                        )
+                        Text(
+                            text = dateState["monthDay"] ?: "腊月十七",
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                        Text(
+                            text = dateState["ganZhi"] ?: "辛巳蛇年 辛丑牛月 丁酉鸡日",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
                     }
                 }
-                item {
-                    Card(
-                        modifier = Modifier.fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp)),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainer
-                        )
+            }
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    MineCard(
+                        iconRes = R.drawable.ic_star,
+                        text = stringResource(R.string.mine_star),
+                        onClick = {
+                            Toast.makeText(context, "收藏", Toast.LENGTH_SHORT).show()
+                        },
+                        modifier = Modifier.weight(1f),
+                    )
+                    MineCard(
+                        iconRes = R.drawable.ic_history,
+                        text = stringResource(R.string.mine_history),
+                        onClick = {
+                            Toast.makeText(context, "观看历史", Toast.LENGTH_SHORT).show()
+                        },
+                        modifier = Modifier.weight(1f),
+                    )
+                    MineCard(
+                        iconRes = R.drawable.ic_download,
+                        text = stringResource(R.string.mine_download),
+                        onClick = {
+                            Toast.makeText(context, "下载缓存", Toast.LENGTH_SHORT).show()
+                        },
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(MaterialTheme.shapes.small),
+                    shape = MaterialTheme.shapes.small,
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth()
-                                .padding(vertical = 8.dp),
-                        ) {
-                            ListItem(
-                                headlineContent = {
-                                    Text(
-                                        text = stringResource(R.string.mine_update),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                    )
-                                },
-                                leadingContent = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_update),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp),
-                                        tint = MaterialTheme.colorScheme.onSurface,
-                                    )
-                                },
-                                trailingContent = {
-                                    Text(
-                                        text = "已是最新版本",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    )
-                                },
-                                modifier = Modifier
-                                    .clickable {
-                                        Toast.makeText(context, "检测更新", Toast.LENGTH_SHORT)
-                                            .show()
-                                    },
-                                colors = ListItemDefaults.colors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainer
+                        MineItem(
+                            iconRes = R.drawable.ic_subscribe,
+                            text = stringResource(R.string.mine_subscribe),
+                            onClick = {
+                                Toast.makeText(context, "订阅管理", Toast.LENGTH_SHORT).show()
+                            },
+                            modifier = Modifier.weight(1f),
+                        )
+                        MineItem(
+                            iconRes = R.drawable.ic_media_link,
+                            text = stringResource(R.string.mine_media_link),
+                            onClick = {
+                                Toast.makeText(context, "播放链接", Toast.LENGTH_SHORT).show()
+                            },
+                            modifier = Modifier.weight(1f),
+                        )
+                        MineItem(
+                            iconRes = R.drawable.ic_videos,
+                            text = stringResource(R.string.mine_video),
+                            onClick = {
+                                Toast.makeText(context, "本地视频", Toast.LENGTH_SHORT).show()
+                            },
+                            modifier = Modifier.weight(1f),
+                        )
+                        MineItem(
+                            iconRes = R.drawable.ic_transcode,
+                            text = stringResource(R.string.mine_transcode),
+                            onClick = {
+                                Toast.makeText(context, "视频转码", Toast.LENGTH_SHORT).show()
+                            },
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
+                }
+            }
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(MaterialTheme.shapes.small),
+                    shape = MaterialTheme.shapes.small,
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                    ) {
+                        ListItem(
+                            headlineContent = {
+                                Text(
+                                    text = stringResource(R.string.mine_update),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                 )
-                            )
-                            ListItem(
-                                headlineContent = {
-                                    Text(
-                                        text = stringResource(R.string.mine_about),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                    )
-                                },
-                                leadingContent = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.ic_about),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(24.dp),
-                                        tint = MaterialTheme.colorScheme.onSurface,
-                                    )
-                                },
-                                trailingContent = {
-                                    Text(
-                                        text = stringResource(R.string.mine_mail),
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    )
-                                },
-                                modifier = Modifier
-                                    .clickable {
-                                        onOpenPage(OverlayPage.About)
-                                    },
-                                colors = ListItemDefaults.colors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            },
+                            leadingContent = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_update),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MaterialTheme.colorScheme.onSurface,
                                 )
+                            },
+                            trailingContent = {
+                                Text(
+                                    text = "已是最新版本",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            },
+                            modifier = Modifier
+                                .clickable {
+                                    Toast.makeText(context, "检测更新", Toast.LENGTH_SHORT)
+                                        .show()
+                                },
+                            colors = ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer
                             )
-                        }
+                        )
+                        ListItem(
+                            headlineContent = {
+                                Text(
+                                    text = stringResource(R.string.mine_about),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                )
+                            },
+                            leadingContent = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_about),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MaterialTheme.colorScheme.onSurface,
+                                )
+                            },
+                            trailingContent = {
+                                Text(
+                                    text = stringResource(R.string.app_name),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            },
+                            modifier = Modifier
+                                .clickable {
+                                    onOpenPage(OverlayPage.About)
+                                },
+                            colors = ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            )
+                        )
                     }
                 }
             }
         }
+    }
 
 }
 
@@ -393,15 +378,18 @@ fun MineCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.small)
             .clickable { onClick() },
-        shape = RoundedCornerShape(8.dp),
+        shape = MaterialTheme.shapes.small,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer
         )
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp),

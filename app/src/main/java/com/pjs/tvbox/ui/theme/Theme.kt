@@ -1,4 +1,5 @@
 package com.pjs.tvbox.ui.theme
+
 import android.app.UiModeManager
 import android.content.Context
 import android.os.Build
@@ -290,6 +291,7 @@ fun AppTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
+
         else -> selectSchemeForContrast(darkTheme)
     }
 
@@ -299,8 +301,14 @@ fun AppTheme(
 
     SideEffect {
         activity.enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT) { darkTheme },
-            navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT) { darkTheme }
+            statusBarStyle = SystemBarStyle.auto(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.TRANSPARENT
+            ) { darkTheme },
+            navigationBarStyle = SystemBarStyle.auto(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.TRANSPARENT
+            ) { darkTheme }
         )
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -313,10 +321,10 @@ fun AppTheme(
         WindowCompat.setDecorFitsSystemWindows(activity.window, false)
     }
 
-  MaterialTheme(
-    colorScheme = colorScheme,
-    typography = typography,
-    shapes = shapes,
-    content = content
-  )
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = typography,
+        shapes = shapes,
+        content = content
+    )
 }

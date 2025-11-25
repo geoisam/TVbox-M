@@ -8,15 +8,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.FontWeight
-import com.pjs.tvbox.ui.view.MainView
+import com.pjs.tvbox.bean.MainBean
 
 @Composable
 fun BottomNav(
     currentRoute: String,
-    onTabSelected: (MainView) -> Unit,
+    onTabSelected: (MainBean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val tabs = listOf(MainView.Main, MainView.Live, MainView.Mine)
+    val tabs = listOf(MainBean.Home, MainBean.Discover, MainBean.Mine)
 
     NavigationBar(
         modifier = modifier
