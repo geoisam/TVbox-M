@@ -85,7 +85,7 @@ fun DBHotView(modifier: Modifier = Modifier) {
             else -> {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(3),
-                    contentPadding = PaddingValues(top = 8.dp, bottom = 16.dp),
+                    contentPadding = PaddingValues(top = 8.dp, bottom = 18.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
@@ -173,7 +173,7 @@ fun MovieCard(movie: Movie) {
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .background(
-                        Color.Black.copy(alpha = 0.78f),
+                        MaterialTheme.colorScheme.onBackground.copy(alpha = 0.78f),
                         RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
                     )
                     .padding(horizontal = 4.dp, vertical = 4.dp),

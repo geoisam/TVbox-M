@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pjs.tvbox.R
 import com.pjs.tvbox.activity.OverlayPage
+import com.pjs.tvbox.ui.theme.LogoFont
 import com.pjs.tvbox.util.LunarUtil
 import java.util.Calendar
 import kotlinx.coroutines.delay
@@ -87,6 +88,7 @@ fun MinePage(
                             painter = painterResource(R.drawable.ic_help),
                             contentDescription = null,
                             modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                 },
@@ -100,6 +102,7 @@ fun MinePage(
                             painter = painterResource(R.drawable.ic_shirt),
                             contentDescription = null,
                             modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                     IconButton(
@@ -111,6 +114,7 @@ fun MinePage(
                             painter = painterResource(R.drawable.ic_settings),
                             contentDescription = null,
                             modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                 }
@@ -143,7 +147,7 @@ fun MinePage(
                             .fillMaxWidth()
                             .padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -156,37 +160,47 @@ fun MinePage(
                             ) {
                                 Text(
                                     text = dateState["yearMonth"] ?: "2002 年 1 月",
-                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                    style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.onSurface,
+                                    fontWeight = FontWeight.Bold,
                                 )
-                                Text(
-                                    text = dateState["shiChen"] ?: "时辰",
-                                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                    color = MaterialTheme.colorScheme.onPrimary,
+                                Box(
                                     modifier = Modifier
                                         .background(
-                                            MaterialTheme.colorScheme.primary,
-                                            MaterialTheme.shapes.medium,
+                                            MaterialTheme.colorScheme.primary.copy(alpha = 0.78f),
+                                            MaterialTheme.shapes.medium
                                         )
                                         .padding(horizontal = 8.dp, vertical = 4.dp),
-                                )
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = dateState["shiChen"] ?: "时辰",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onPrimary,
+                                        fontWeight = FontWeight.Bold,
+                                    )
+                                }
                             }
                             Text(
                                 text = dateState["week"] ?: "星期二",
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface,
+                                fontWeight = FontWeight.Bold,
                             )
                         }
+                        Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = dateState["day"] ?: "29",
-                            style = MaterialTheme.typography.displayLarge.copy(fontWeight = FontWeight.Bold),
+                            style = MaterialTheme.typography.displayLarge,
                             color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(vertical = 12.dp),
+                            fontWeight = FontWeight.Bold,
                         )
+                        Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = dateState["monthDay"] ?: "腊月十七",
-                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                            style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onSurface,
+                            fontWeight = FontWeight.Bold,
                         )
                         Text(
                             text = dateState["ganZhi"] ?: "辛巳蛇年 辛丑牛月 丁酉鸡日",
@@ -205,7 +219,7 @@ fun MinePage(
                         iconRes = R.drawable.ic_star,
                         text = stringResource(R.string.mine_star),
                         onClick = {
-                            Toast.makeText(context, "收藏", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "收藏夹", Toast.LENGTH_SHORT).show()
                         },
                         modifier = Modifier.weight(1f),
                     )
@@ -218,7 +232,7 @@ fun MinePage(
                         modifier = Modifier.weight(1f),
                     )
                     MineCard(
-                        iconRes = R.drawable.ic_download,
+                        iconRes = R.drawable.ic_cloud_download,
                         text = stringResource(R.string.mine_download),
                         onClick = {
                             Toast.makeText(context, "下载缓存", Toast.LENGTH_SHORT).show()
@@ -241,7 +255,7 @@ fun MinePage(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         MineItem(
-                            iconRes = R.drawable.ic_subscribe,
+                            iconRes = R.drawable.ic_database,
                             text = stringResource(R.string.mine_subscribe),
                             onClick = {
                                 Toast.makeText(context, "订阅管理", Toast.LENGTH_SHORT).show()
@@ -265,10 +279,10 @@ fun MinePage(
                             modifier = Modifier.weight(1f),
                         )
                         MineItem(
-                            iconRes = R.drawable.ic_transcode,
-                            text = stringResource(R.string.mine_transcode),
+                            iconRes = R.drawable.ic_storage,
+                            text = stringResource(R.string.mine_backup),
                             onClick = {
-                                Toast.makeText(context, "视频转码", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "备份恢复", Toast.LENGTH_SHORT).show()
                             },
                             modifier = Modifier.weight(1f),
                         )
@@ -300,7 +314,7 @@ fun MinePage(
                             },
                             leadingContent = {
                                 Icon(
-                                    painter = painterResource(R.drawable.ic_update),
+                                    painter = painterResource(R.drawable.ic_rocket),
                                     contentDescription = null,
                                     modifier = Modifier.size(24.dp),
                                     tint = MaterialTheme.colorScheme.onSurface,
@@ -332,7 +346,7 @@ fun MinePage(
                             },
                             leadingContent = {
                                 Icon(
-                                    painter = painterResource(R.drawable.ic_about),
+                                    painter = painterResource(R.drawable.ic_info),
                                     contentDescription = null,
                                     modifier = Modifier.size(24.dp),
                                     tint = MaterialTheme.colorScheme.onSurface,
@@ -341,6 +355,7 @@ fun MinePage(
                             trailingContent = {
                                 Text(
                                     text = stringResource(R.string.app_name),
+                                    fontFamily = LogoFont,
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
@@ -355,6 +370,7 @@ fun MinePage(
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(18.dp))
             }
         }
     }

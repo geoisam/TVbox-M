@@ -1,11 +1,13 @@
 package com.pjs.tvbox.ui.page
 
 import android.content.Intent
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -22,6 +24,9 @@ import androidx.compose.ui.unit.dp
 import com.pjs.tvbox.R
 import com.pjs.tvbox.util.AppUtil
 import androidx.core.net.toUri
+import com.pjs.tvbox.ui.theme.LogoFont
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 sealed class AboutScreen {
     object Main : AboutScreen()
@@ -69,12 +74,17 @@ private fun AboutMainScreen(
     val appVersionName = AppUtil.getVersionName(context)
     val appVersionCode = AppUtil.getVersionCode(context)
 
+    val appName = stringResource(R.string.app_name)
+    val githubName = stringResource(R.string.about_github_name)
+    val githubRepo = stringResource(R.string.about_github_repo)
+    val githubUrl = "https://github.com/${githubName}/${githubRepo}"
     val changeTitle = stringResource(R.string.about_change)
     val sponsorTitle = stringResource(R.string.about_sponsor)
     val thanksTitle = stringResource(R.string.about_thanks)
     val disclaimerTitle = stringResource(R.string.about_disclaimer)
-    val agreementsTitle = stringResource(R.string.about_agreements)
-    val permissionsTitle = stringResource(R.string.about_permissions)
+    val agreementTitle = stringResource(R.string.about_agreement)
+    val privacyTitle = stringResource(R.string.about_privacy)
+    val permissionTitle = stringResource(R.string.about_permission)
 
     Scaffold(
         topBar = {
@@ -92,6 +102,21 @@ private fun AboutMainScreen(
                             painter = painterResource(R.drawable.ic_arrow_left),
                             contentDescription = null,
                             modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onSurface,
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            Toast.makeText(context, "更多", Toast.LENGTH_SHORT).show()
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_mail),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                 }
@@ -102,7 +127,7 @@ private fun AboutMainScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             item {
@@ -110,23 +135,24 @@ private fun AboutMainScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+                    Spacer(modifier = Modifier.height(12.dp))
                     Icon(
                         painter = painterResource(R.drawable.ic_logo_fill),
                         contentDescription = null,
                         tint = Color.White,
                         modifier = Modifier
-                            .size(118.dp)
-                            .padding(16.dp)
+                            .size(88.dp)
                             .background(
                                 Color.Black,
                                 MaterialTheme.shapes.medium
                             )
                     )
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = stringResource(R.string.app_name),
+                        text = appName,
+                        fontFamily = LogoFont,
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = "v$appVersionName.$appVersionCode",
@@ -134,7 +160,7 @@ private fun AboutMainScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                Spacer(modifier = Modifier.height(18.dp))
+                Spacer(modifier = Modifier.height(8.dp))
             }
             item {
                 Card(
@@ -145,7 +171,7 @@ private fun AboutMainScreen(
                             context.startActivity(
                                 Intent(
                                     Intent.ACTION_VIEW,
-                                    "https://github.com/geoisam/TVD-Mobile".toUri()
+                                    githubUrl.toUri()
                                 )
                             )
                         },
@@ -166,13 +192,13 @@ private fun AboutMainScreen(
                         Column(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(horizontal = 12.dp)
+                                .padding(horizontal = 12.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
                             Text(
-                                text = stringResource(R.string.about_github_url),
+                                text = "${githubName}/${githubRepo}",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(top = 2.dp, bottom = 1.dp)
                             )
                             Text(
                                 text = stringResource(R.string.about_github_desc),
@@ -180,21 +206,24 @@ private fun AboutMainScreen(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.padding(top = 1.dp, bottom = 2.dp)
                             )
                         }
-                        Text(
-                            text = stringResource(R.string.LICENSE),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            fontWeight = FontWeight.Bold,
+                        Box(
                             modifier = Modifier
                                 .background(
-                                    color = MaterialTheme.colorScheme.primary,
-                                    shape = MaterialTheme.shapes.medium
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.78f),
+                                    MaterialTheme.shapes.medium
                                 )
                                 .padding(horizontal = 8.dp, vertical = 4.dp),
-                        )
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = stringResource(R.string.LICENSE),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
                     }
                 }
             }
@@ -251,7 +280,7 @@ private fun AboutMainScreen(
                                 )
                             },
                             modifier = Modifier.clickable {
-                                onOpenMarkdown("md/SponsorItem.md", sponsorTitle)
+                                onOpenMarkdown("md/Sponsor.md", sponsorTitle)
                             },
                             colors = ListItemDefaults.colors(
                                 containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -306,7 +335,7 @@ private fun AboutMainScreen(
                         ListItem(
                             headlineContent = {
                                 Text(
-                                    text = permissionsTitle,
+                                    text = agreementTitle,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface,
                                 )
@@ -320,7 +349,7 @@ private fun AboutMainScreen(
                                 )
                             },
                             modifier = Modifier.clickable {
-                                onOpenMarkdown("md/Permissions.md", permissionsTitle)
+                                onOpenMarkdown("md/Agreement.md", agreementTitle)
                             },
                             colors = ListItemDefaults.colors(
                                 containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -329,7 +358,7 @@ private fun AboutMainScreen(
                         ListItem(
                             headlineContent = {
                                 Text(
-                                    text = agreementsTitle,
+                                    text = privacyTitle,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface,
                                 )
@@ -343,7 +372,30 @@ private fun AboutMainScreen(
                                 )
                             },
                             modifier = Modifier.clickable {
-                                onOpenMarkdown("md/Agreements.md", agreementsTitle)
+                                onOpenMarkdown("md/Privacy.md", privacyTitle)
+                            },
+                            colors = ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            ),
+                        )
+                        ListItem(
+                            headlineContent = {
+                                Text(
+                                    text = permissionTitle,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                )
+                            },
+                            trailingContent = {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_arrow_right),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            },
+                            modifier = Modifier.clickable {
+                                onOpenMarkdown("md/Permission.md", permissionTitle)
                             },
                             colors = ListItemDefaults.colors(
                                 containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -352,6 +404,38 @@ private fun AboutMainScreen(
                     }
                 }
             }
+            item{
+                Spacer(modifier = Modifier.height(12.dp))
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(
+                        text = stringResource(R.string.about_desc),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Text(
+                        text = stringResource(R.string.about_author),
+                        fontFamily = LogoFont,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Text(
+                        text = "Copyright ©${getYearNumber()} ${appName}. All Rights Reserved",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                Spacer(modifier = Modifier.height(32.dp))
+            }
         }
     }
+}
+
+fun getYearNumber(): Int {
+    val currentDate = LocalDate.now()
+    val formatter = DateTimeFormatter.ofPattern("yyyy")
+    return currentDate.format(formatter).toInt()
 }

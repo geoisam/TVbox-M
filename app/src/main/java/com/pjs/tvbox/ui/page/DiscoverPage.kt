@@ -43,59 +43,77 @@ fun DiscoverPage() {
     val context = LocalContext.current
 
     val liveTitle = stringResource(R.string.tools_live)
-    val liveSubTitle = stringResource(R.string.tools_live_desc)
+    val m3u8Title = stringResource(R.string.tools_m3u8)
     val topTitle = stringResource(R.string.tools_top)
-    val topSubTitle = stringResource(R.string.tools_top_desc)
     val hotTitle = stringResource(R.string.tools_hot)
-    val hotSubTitle = stringResource(R.string.tools_hot_desc)
-    val rateTitle = stringResource(R.string.tools_rate)
-    val rateSubTitle = stringResource(R.string.tools_rate_desc)
-    val paidTitle = stringResource(R.string.tools_paid)
-    val paidSubTitle = stringResource(R.string.tools_paid_desc)
+    val ticketTitle = stringResource(R.string.tools_ticket)
+    val ratingTitle = stringResource(R.string.tools_rating)
     val newsTitle = stringResource(R.string.tools_news)
-    val newsSubTitle = stringResource(R.string.tools_news_desc)
+    val watermarkTitle = stringResource(R.string.tools_watermark)
 
     val toolsList = listOf(
         ToolItem(
             icon = R.drawable.ic_tv,
-            liveTitle, liveSubTitle,
+            title = liveTitle,
+            subtitle = stringResource(R.string.tools_live_desc),
+            onClick = {
+                Toast.makeText(context, liveTitle, Toast.LENGTH_SHORT).show()
+            }
+        ),
+        ToolItem(
+            icon = R.drawable.ic_change_circle,
+            title = m3u8Title,
+            subtitle = stringResource(R.string.tools_m3u8_desc),
             onClick = {
                 Toast.makeText(context, liveTitle, Toast.LENGTH_SHORT).show()
             }
         ),
         ToolItem(
             icon = R.drawable.ic_movie,
-            topTitle, topSubTitle,
+            title = topTitle,
+            subtitle = stringResource(R.string.tools_top_desc),
             onClick = {
                 Toast.makeText(context, topTitle, Toast.LENGTH_SHORT).show()
             }
         ),
         ToolItem(
-            icon = R.drawable.ic_hot,
-            hotTitle, hotSubTitle,
+            icon = R.drawable.ic_filter_vintage,
+            title = hotTitle,
+            subtitle = stringResource(R.string.tools_hot_desc),
             onClick = {
                 Toast.makeText(context, hotTitle, Toast.LENGTH_SHORT).show()
             }
         ),
         ToolItem(
-            icon = R.drawable.ic_rate,
-            rateTitle, rateSubTitle,
+            icon = R.drawable.ic_local_atm,
+            title = ticketTitle,
+            subtitle = stringResource(R.string.tools_ticket_desc),
             onClick = {
-                Toast.makeText(context, rateTitle, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, ticketTitle, Toast.LENGTH_SHORT).show()
             }
         ),
         ToolItem(
-            icon = R.drawable.ic_paid,
-            paidTitle, paidSubTitle,
+            icon = R.drawable.ic_whatshot,
+            title = ratingTitle,
+            subtitle = stringResource(R.string.tools_rating_desc),
             onClick = {
-                Toast.makeText(context, paidTitle, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, ratingTitle, Toast.LENGTH_SHORT).show()
             }
         ),
         ToolItem(
             icon = R.drawable.ic_news,
-            newsTitle, newsSubTitle,
+            title = newsTitle,
+            subtitle = stringResource(R.string.tools_news_desc),
             onClick = {
                 Toast.makeText(context, newsTitle, Toast.LENGTH_SHORT).show()
+            }
+        ),
+        ToolItem(
+            icon = R.drawable.ic_psychiatry,
+            title = watermarkTitle,
+            subtitle = stringResource(R.string.tools_watermark_desc),
+            onClick = {
+                Toast.makeText(context, watermarkTitle, Toast.LENGTH_SHORT).show()
             }
         ),
     )
@@ -105,7 +123,7 @@ fun DiscoverPage() {
             CenterAlignedTopAppBar(
                 title = {
                     Column(
-                        modifier = Modifier.padding(horizontal = 12.dp),
+                        modifier = Modifier.padding(horizontal = 4.dp),
                     ) {
                         Card(
                             modifier = Modifier
@@ -141,6 +159,20 @@ fun DiscoverPage() {
                         }
                     }
                 },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            Toast.makeText(context, "帮助", Toast.LENGTH_SHORT).show()
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_help),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onSurface,
+                        )
+                    }
+                },
                 actions = {
                     IconButton(
                         onClick = {
@@ -148,9 +180,10 @@ fun DiscoverPage() {
                         }
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_add),
+                            painter = painterResource(R.drawable.ic_add_circle),
                             contentDescription = null,
                             modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                 }
@@ -166,14 +199,14 @@ fun DiscoverPage() {
         ) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(bottom = 16.dp),
+                contentPadding = PaddingValues(bottom = 18.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 items(toolsList.size) { index ->
                     val tool = toolsList[index]
                     ToolsCard(
-                        iconRes = tool.icon,
+                        logo = tool.icon,
                         title = tool.title,
                         subtitle = tool.subtitle,
                         onClick = tool.onClick,
@@ -187,7 +220,7 @@ fun DiscoverPage() {
 
 @Composable
 fun ToolsCard(
-    iconRes: Int,
+    logo: Int,
     title: String,
     subtitle: String,
     onClick: () -> Unit,
@@ -208,9 +241,9 @@ fun ToolsCard(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
         ) {
             Image(
-                painter = painterResource(iconRes),
+                painter = painterResource(logo),
                 contentDescription = null,
-                modifier = Modifier.size(44.dp),
+                modifier = Modifier.size(41.dp),
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
             )
             Spacer(modifier = Modifier.height(8.dp))

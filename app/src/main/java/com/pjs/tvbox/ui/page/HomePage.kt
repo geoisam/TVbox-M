@@ -26,7 +26,7 @@ fun HomePage() {
             CenterAlignedTopAppBar(
                 title = {
                     Column(
-                        modifier = Modifier.padding(horizontal = 12.dp),
+                        modifier = Modifier.padding(horizontal = 4.dp),
                     ) {
                         Card(
                             modifier = Modifier
@@ -65,7 +65,7 @@ fun HomePage() {
                 navigationIcon = {
                     Row(
                         modifier = Modifier
-                            .padding(start = 14.dp)
+                            .padding(horizontal = 16.dp)
                             .clickable {
                                 Toast.makeText(context, "数据源", Toast.LENGTH_SHORT).show()
                             },
@@ -82,7 +82,7 @@ fun HomePage() {
                             painter = painterResource(R.drawable.ic_arrow_down),
                             contentDescription = null,
                             modifier = Modifier.size(20.dp),
-                            tint = MaterialTheme.colorScheme.onSurface
+                            tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                 },
@@ -93,9 +93,10 @@ fun HomePage() {
                         }
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_add),
+                            painter = painterResource(R.drawable.ic_add_circle),
                             contentDescription = null,
                             modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                 }

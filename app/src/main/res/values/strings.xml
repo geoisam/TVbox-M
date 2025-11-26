@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TVD</string>
+    <string name="app_name">TVB</string>
     <string name="LICENSE">AGPL v3</string>
 
     <string name="nav_home">首页</string>
@@ -17,16 +17,20 @@
 
     <string name="tools_live">电视直播</string>
     <string name="tools_live_desc">全球电视台网络直播线路</string>
+    <string name="tools_m3u8">视频转码</string>
+    <string name="tools_m3u8_desc">m3u8视频流转换mp4格式</string>
     <string name="tools_top">电影排名</string>
     <string name="tools_top_desc">豆瓣电影 Top 250</string>
     <string name="tools_hot">网播热度</string>
-    <string name="tools_hot_desc">七大流媒体平台播放排名</string>
-    <string name="tools_paid">近期票房</string>
-    <string name="tools_paid_desc">猫眼电影票房综合排名</string>
-    <string name="tools_rate">电视收视</string>
-    <string name="tools_rate_desc">欢网大数据直播频道排名</string>
+    <string name="tools_hot_desc">流媒体平台播放综合排名</string>
+    <string name="tools_ticket">近期票房</string>
+    <string name="tools_ticket_desc">猫眼电影总票房数据排名</string>
+    <string name="tools_rating">电视收视</string>
+    <string name="tools_rating_desc">欢网大数据直播频道排名</string>
     <string name="tools_news">今日热榜</string>
     <string name="tools_news_desc">全网热门平台热搜榜单</string>
+    <string name="tools_watermark">无水印解析</string>
+    <string name="tools_watermark_desc">视频图文无水印解析下载</string>
 
     <string name="mine_star">收藏夹</string>
     <string name="mine_history">观看历史</string>
@@ -34,18 +38,21 @@
     <string name="mine_subscribe">订阅管理</string>
     <string name="mine_media_link">播放链接</string>
     <string name="mine_video">本地视频</string>
-    <string name="mine_transcode">视频转码</string>
+    <string name="mine_backup">备份与恢复</string>
     <string name="mine_update">检测更新</string>
     <string name="mine_about">关于</string>
-    <string name="mine_mail">geoisam@qq.com</string>
 
     <string name="about_desc">愿你一生欢喜，不为世俗所及</string>
+    <string name="about_author">GeoiSam</string>
+    <string name="about_author_mail">geoisam@qq.com</string>
     <string name="about_change">更新日志</string>
     <string name="about_sponsor">赞赏支持</string>
     <string name="about_thanks">特别鸣谢</string>
     <string name="about_disclaimer">免责声明</string>
-    <string name="about_permissions">应用权限清单</string>
-    <string name="about_agreements">第三方SDK清单</string>
-    <string name="about_github_url">geoisam/TVD-Mobile</string>
+    <string name="about_agreement">用户协议</string>
+    <string name="about_privacy">隐私政策</string>
+    <string name="about_permission">权限清单</string>
+    <string name="about_github_name">geoisam</string>
+    <string name="about_github_repo">TVB-Mobile</string>
     <string name="about_github_desc">USE AT YOUR OWN RISK</string>
 </resources>

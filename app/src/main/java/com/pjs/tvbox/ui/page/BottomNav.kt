@@ -33,11 +33,13 @@ fun BottomNav(
                 label = {
                     Text(
                         text = stringResource(screen.titleResId),
-                        style = if (currentRoute == screen.route) {
-                            MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (currentRoute == screen.route) {
+                            MaterialTheme.colorScheme.onSurface
                         } else {
-                            MaterialTheme.typography.labelMedium
-                        }
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
+                        fontWeight = FontWeight.Bold,
                     )
                 },
                 selected = currentRoute == screen.route,

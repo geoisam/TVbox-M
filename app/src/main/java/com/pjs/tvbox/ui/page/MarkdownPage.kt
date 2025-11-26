@@ -100,6 +100,7 @@ fun MarkdownPage(
                             painter = painterResource(R.drawable.ic_arrow_left),
                             contentDescription = null,
                             modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onSurface,
                         )
                     }
                 },
@@ -117,7 +118,7 @@ fun MarkdownPage(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                .padding(horizontal = 16.dp),
             update = { textView ->
                 textView.text = android.text.Html.fromHtml(
                     html,
