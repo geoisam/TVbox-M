@@ -1,12 +1,10 @@
-## \# TVD赞赏支持
-
 <br>
 
-![wechat](../qr/wechat.jpg)
+![WeChat](../qr/wechat.jpg)
 
-<br>
+![Alipay](../qr/alipay.jpg)
 
-![alipay](../qr/alipay.jpg)
+![RedEnvelope](../qr/redenvelope.png)
 
 <br>
 <br>

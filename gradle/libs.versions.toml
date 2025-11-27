@@ -16,10 +16,12 @@ androidx-lifecycle = "2.9.4"
 
 cn-lunar = "1.7.7"
 com-squareup-okhttp3 = "5.3.2"
-io-coil3 = "3.3.0"
+com-squareup-okio = "3.16.4"
+io-coil-kt-coil3 = "3.3.0"
 org-commonmark = "0.27.0"
-org-jetbrains-kotlinx = "1.9.0"
-androidx-media3 = "1.8.0"
+kotlinx-serialization-json = "1.9.0"
+kotlinx-coroutines-android = "1.10.2"
+carguo-gsyvideoplayer = "11.2.0"
 desugar-jdk-libs = "2.1.5"
 
 
@@ -37,31 +39,39 @@ androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
 androidx-compose-animation-core = { module = "androidx.compose.animation:animation-core" }
+
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
+
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
 cn-lunar = { module = "cn.6tail:lunar", version.ref = "cn-lunar" }
-com-squareup-okhttp3 = { module = "com.squareup.okhttp3:okhttp", version.ref = "com-squareup-okhttp3" }
-io-coil3-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "io-coil3" }
-io-coil3-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "io-coil3" }
-org-commonmark = { module = "org.commonmark:commonmark", version.ref = "org-commonmark" }
-org-commonmark-ext-tables = { module = "org.commonmark:commonmark-ext-gfm-tables", version.ref = "org-commonmark" }
-org-commonmark-ext-strikethrough = { module = "org.commonmark:commonmark-ext-gfm-strikethrough", version.ref = "org-commonmark" }
-org-commonmark-ext-ins = { module = "org.commonmark:commonmark-ext-ins", version.ref = "org-commonmark" }
-org-jetbrains-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "org-jetbrains-kotlinx" }
-androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "androidx-media3" }
-androidx-media3-exoplayer-hls = { module = "androidx.media3:media3-exoplayer-hls", version.ref = "androidx-media3" }
-androidx-media3-exoplayer-dash = { module = "androidx.media3:media3-exoplayer-dash", version.ref = "androidx-media3" }
-androidx-media3-common = { module = "androidx.media3:media3-common", version.ref = "androidx-media3" }
-androidx-media3-session = { module="androidx.media3:media3-session", version.ref = "androidx-media3" }
-androidx-media3-datasource = { module = "androidx.media3:media3-datasource", version.ref = "androidx-media3" }
-androidx-media3-datasource-okhttp = { module = "androidx.media3:media3-datasource-okhttp", version.ref = "androidx-media3" }
-androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "androidx-media3" }
-androidx-media3-ui-compose = { module = "androidx.media3:media3-ui-compose", version.ref = "androidx-media3" }
-desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
 
+com-squareup-okhttp3 = { module = "com.squareup.okhttp3:okhttp", version.ref = "com-squareup-okhttp3" }
+com-squareup-okio = { module = "com.squareup.okio:okio", version.ref = "com-squareup-okio" }
+
+org-jetbrains-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+org-jetbrains-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines-android" }
+
+io-coil3-coil = { module = "io.coil-kt.coil3:coil", version.ref = "io-coil-kt-coil3" }
+io-coil3-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "io-coil-kt-coil3" }
+io-coil3-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "io-coil-kt-coil3" }
+
+org-commonmark = { module = "org.commonmark:commonmark", version.ref = "org-commonmark" }
+org-commonmark-ext-autolink = { module = "org.commonmark:commonmark-ext-autolink", version.ref = "org-commonmark" }
+org-commonmark-ext-footnotes = { module = "org.commonmark:commonmark-ext-footnotes", version.ref = "org-commonmark" }
+org-commonmark-ext-strikethrough = { module = "org.commonmark:commonmark-ext-gfm-strikethrough", version.ref = "org-commonmark" }
+org-commonmark-ext-tables = { module = "org.commonmark:commonmark-ext-gfm-tables", version.ref = "org-commonmark" }
+org-commonmark-ext-image = { module = "org.commonmark:commonmark-ext-image-attributes", version.ref = "org-commonmark" }
+org-commonmark-ext-ins = { module = "org.commonmark:commonmark-ext-ins", version.ref = "org-commonmark" }
+org-commonmark-ext-tasklist = { module = "org.commonmark:commonmark-ext-task-list-items", version.ref = "org-commonmark" }
+
+io-github-carguo-gsyvideoplayer-java = { module = "io.github.carguo:gsyvideoplayer-java", version.ref = "carguo-gsyvideoplayer" }
+io-github-carguo-gsyvideoplayer-exo2 = { module = "io.github.carguo:gsyvideoplayer-exo2", version.ref = "carguo-gsyvideoplayer" }
+io-github-carguo-gsyvideoplayer-ijk = { module = "io.github.carguo:gsyvideoplayer-ex_so", version.ref = "carguo-gsyvideoplayer" }
+
+desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

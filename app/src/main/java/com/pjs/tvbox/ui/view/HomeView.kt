@@ -41,7 +41,9 @@ import com.pjs.tvbox.data.DouBanHotData
 import com.pjs.tvbox.model.Movie
 
 @Composable
-fun DBHotView(modifier: Modifier = Modifier) {
+fun DBHotView(
+    modifier: Modifier = Modifier
+) {
     var movies by remember { mutableStateOf<List<Movie>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
@@ -103,8 +105,7 @@ fun MovieCard(movie: Movie) {
     val context = LocalContext.current
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
             .aspectRatio(0.69f)
             .clip(MaterialTheme.shapes.small)
             .clickable {
@@ -122,7 +123,8 @@ fun MovieCard(movie: Movie) {
                     .build(),
                 loading = {
                     Box(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize()
+                            .clip(MaterialTheme.shapes.small),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator(strokeWidth = 4.dp)
@@ -130,15 +132,14 @@ fun MovieCard(movie: Movie) {
                 },
                 error = {
                     Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(8.dp)),
+                        modifier = Modifier.fillMaxSize()
+                            .clip(MaterialTheme.shapes.small),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             "图片加载失败",
                             color = Color.Gray,
-                            style = MaterialTheme.typography.labelSmall,
+                            style = MaterialTheme.typography.labelMedium,
                         )
                     }
                 },
@@ -146,7 +147,7 @@ fun MovieCard(movie: Movie) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(8.dp)),
+                    .clip(MaterialTheme.shapes.small),
             )
 
             movie.rating?.let { rating ->

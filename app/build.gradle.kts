@@ -75,6 +75,7 @@ android {
 }
 
 dependencies {
+
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
@@ -87,29 +88,38 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.animation.core)
+
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
+
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     implementation(libs.cn.lunar)
+
     implementation(libs.com.squareup.okhttp3)
+    implementation(libs.com.squareup.okio)
+
+    implementation(libs.org.jetbrains.kotlinx.serialization.json)
+    implementation(libs.org.jetbrains.kotlinx.coroutines.android)
+
+    implementation(libs.io.coil3.coil)
     implementation(libs.io.coil3.compose)
     implementation(libs.io.coil3.network.okhttp)
+
     implementation(libs.org.commonmark)
-    implementation(libs.org.commonmark.ext.tables)
+    implementation(libs.org.commonmark.ext.autolink)
+    implementation(libs.org.commonmark.ext.footnotes)
     implementation(libs.org.commonmark.ext.strikethrough)
+    implementation(libs.org.commonmark.ext.tables)
+    implementation(libs.org.commonmark.ext.image)
     implementation(libs.org.commonmark.ext.ins)
-    implementation(libs.org.jetbrains.serialization.json)
-    implementation(libs.androidx.media3.exoplayer)
-    implementation(libs.androidx.media3.exoplayer.hls)
-    implementation(libs.androidx.media3.exoplayer.dash)
-    implementation(libs.androidx.media3.common)
-    implementation(libs.androidx.media3.session)
-    implementation(libs.androidx.media3.datasource)
-    implementation(libs.androidx.media3.datasource.okhttp)
-    implementation(libs.androidx.media3.ui)
-    implementation(libs.androidx.media3.ui.compose)
+    implementation(libs.org.commonmark.ext.tasklist)
+
+    implementation(libs.io.github.carguo.gsyvideoplayer.java)
+    implementation(libs.io.github.carguo.gsyvideoplayer.exo2)
+    implementation(libs.io.github.carguo.gsyvideoplayer.ijk)
+
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
