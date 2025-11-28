@@ -44,7 +44,7 @@ class SplashActivity : ComponentActivity() {
 @Composable
 fun SplashScreen(onTimeout: () -> Unit) {
     LaunchedEffect(Unit) {
-        delay(1500)
+        delay(500)
         onTimeout()
     }
 

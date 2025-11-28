@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pjs.tvbox.R
 import com.pjs.tvbox.activity.OverlayPage
+import com.pjs.tvbox.ui.dialog.TipsDialog
 import com.pjs.tvbox.ui.theme.LogoFont
 import com.pjs.tvbox.util.LunarUtil
 import java.util.Calendar
@@ -35,6 +36,7 @@ fun MinePage(
     onOpenPage: (OverlayPage) -> Unit
 ) {
     val context = LocalContext.current
+    val showTipsDialog = remember { mutableStateOf(false) }
     val dateState = remember { mutableStateMapOf<String, String>() }
 
     fun updateDateState() {
@@ -81,7 +83,7 @@ fun MinePage(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            Toast.makeText(context, "帮助", Toast.LENGTH_SHORT).show()
+                            showTipsDialog.value = true
                         }
                     ) {
                         Icon(
@@ -118,6 +120,18 @@ fun MinePage(
                         )
                     }
                 }
+            )
+            TipsDialog  (
+                isOpen = showTipsDialog.value,
+                onClose = { showTipsDialog.value = false },
+                title = "友情提示",
+                message = "本软件当前版本为 开源免费 使用，如果你是从某些地方付费购买的话，那你就是被骗了！",
+                confirmButtonText = "知道了",
+                onConfirm = { },
+                dismissButtonText = null,
+                onDismiss = { },
+                closeIcon = false,
+                onCloseIconClick = { }
             )
         },
     ) { padding ->

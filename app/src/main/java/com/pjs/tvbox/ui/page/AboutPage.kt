@@ -34,7 +34,9 @@ sealed class AboutScreen {
 }
 
 @Composable
-fun AboutPage(onBack: () -> Unit) {
+fun AboutPage(
+    onBack: () -> Unit
+) {
     var current by remember { mutableStateOf<AboutScreen>(AboutScreen.Main) }
 
     BackHandler(enabled = true) {
@@ -46,7 +48,7 @@ fun AboutPage(onBack: () -> Unit) {
     }
 
     when (current) {
-        AboutScreen.Main -> AboutMainScreen(
+        AboutScreen.Main -> AboutMain(
             onBack = onBack,
             onOpenMarkdown = { file, title ->
                 current = AboutScreen.Markdown(file, title)
@@ -66,7 +68,7 @@ fun AboutPage(onBack: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AboutMainScreen(
+private fun AboutMain(
     onBack: () -> Unit,
     onOpenMarkdown: (file: String, title: String) -> Unit
 ) {

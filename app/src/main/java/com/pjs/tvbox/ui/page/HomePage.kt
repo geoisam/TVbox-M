@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.pjs.tvbox.R
-import com.pjs.tvbox.ui.view.DBHotView
+import com.pjs.tvbox.ui.view.DouBanHotView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -121,7 +121,7 @@ fun HomePage() {
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
-            DBHotView(modifier = Modifier.weight(1f))
+            DouBanHotView(modifier = Modifier.weight(1f))
         }
     }
 }

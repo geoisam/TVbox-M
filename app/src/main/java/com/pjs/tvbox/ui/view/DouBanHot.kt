@@ -41,7 +41,7 @@ import com.pjs.tvbox.data.DouBanHotData
 import com.pjs.tvbox.model.Movie
 
 @Composable
-fun DBHotView(
+fun DouBanHotView(
     modifier: Modifier = Modifier
 ) {
     var movies by remember { mutableStateOf<List<Movie>>(emptyList()) }

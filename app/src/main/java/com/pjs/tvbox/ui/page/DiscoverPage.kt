@@ -27,6 +27,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
@@ -35,85 +37,97 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.pjs.tvbox.R
+import com.pjs.tvbox.activity.OverlayPage
 import com.pjs.tvbox.model.ToolItem
+import com.pjs.tvbox.ui.dialog.TipsDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DiscoverPage() {
+fun DiscoverPage(
+    onOpenPage: (OverlayPage) -> Unit
+) {
     val context = LocalContext.current
-
-    val liveTitle = stringResource(R.string.tools_live)
-    val m3u8Title = stringResource(R.string.tools_m3u8)
-    val topTitle = stringResource(R.string.tools_top)
-    val hotTitle = stringResource(R.string.tools_hot)
-    val ticketTitle = stringResource(R.string.tools_ticket)
-    val ratingTitle = stringResource(R.string.tools_rating)
-    val newsTitle = stringResource(R.string.tools_news)
-    val watermarkTitle = stringResource(R.string.tools_watermark)
+    val showTipsDialog = remember { mutableStateOf(false) }
 
     val toolsList = listOf(
         ToolItem(
             icon = R.drawable.ic_tv,
-            title = liveTitle,
-            subtitle = stringResource(R.string.tools_live_desc),
+            title = stringResource(R.string.tool_live),
+            subtitle = stringResource(R.string.tool_live_desc),
             onClick = {
-                Toast.makeText(context, liveTitle, Toast.LENGTH_SHORT).show()
+                onOpenPage(OverlayPage.TvLive)
             }
         ),
         ToolItem(
             icon = R.drawable.ic_change_circle,
-            title = m3u8Title,
-            subtitle = stringResource(R.string.tools_m3u8_desc),
+            title = stringResource(R.string.tool_transcode),
+            subtitle = stringResource(R.string.tool_transcode_desc),
             onClick = {
-                Toast.makeText(context, liveTitle, Toast.LENGTH_SHORT).show()
+                onOpenPage(OverlayPage.Transcode)
             }
         ),
         ToolItem(
             icon = R.drawable.ic_movie,
-            title = topTitle,
-            subtitle = stringResource(R.string.tools_top_desc),
+            title = stringResource(R.string.tool_rating),
+            subtitle = stringResource(R.string.tool_rating_desc),
             onClick = {
-                Toast.makeText(context, topTitle, Toast.LENGTH_SHORT).show()
+                onOpenPage(OverlayPage.DouBanTop)
             }
         ),
         ToolItem(
-            icon = R.drawable.ic_filter_vintage,
-            title = hotTitle,
-            subtitle = stringResource(R.string.tools_hot_desc),
+            icon = R.drawable.ic_hive,
+            title = stringResource(R.string.tool_hot),
+            subtitle = stringResource(R.string.tool_hot_desc),
             onClick = {
-                Toast.makeText(context, hotTitle, Toast.LENGTH_SHORT).show()
+                onOpenPage(OverlayPage.MaoYanHot)
             }
         ),
         ToolItem(
-            icon = R.drawable.ic_local_atm,
-            title = ticketTitle,
-            subtitle = stringResource(R.string.tools_ticket_desc),
+            icon = R.drawable.ic_calendar,
+            title = stringResource(R.string.tool_timeline),
+            subtitle = stringResource(R.string.tool_timeline_desc),
             onClick = {
-                Toast.makeText(context, ticketTitle, Toast.LENGTH_SHORT).show()
+                onOpenPage(OverlayPage.BiliTimeline)
             }
         ),
         ToolItem(
             icon = R.drawable.ic_whatshot,
-            title = ratingTitle,
-            subtitle = stringResource(R.string.tools_rating_desc),
+            title = stringResource(R.string.tool_anime),
+            subtitle = stringResource(R.string.tool_anime_desc),
             onClick = {
-                Toast.makeText(context, ratingTitle, Toast.LENGTH_SHORT).show()
+                onOpenPage(OverlayPage.BiliAnimeHot)
+            }
+        ),
+        ToolItem(
+            icon = R.drawable.ic_local_atm,
+            title = stringResource(R.string.tool_ticket),
+            subtitle = stringResource(R.string.tool_ticket_desc),
+            onClick = {
+                onOpenPage(OverlayPage.CMDatabase)
+            }
+        ),
+        ToolItem(
+            icon = R.drawable.ic_kanban,
+            title = stringResource(R.string.tool_top),
+            subtitle = stringResource(R.string.tool_top_desc),
+            onClick = {
+                onOpenPage(OverlayPage.HuanTvTop)
             }
         ),
         ToolItem(
             icon = R.drawable.ic_news,
-            title = newsTitle,
-            subtitle = stringResource(R.string.tools_news_desc),
+            title = stringResource(R.string.tool_news),
+            subtitle = stringResource(R.string.tool_news_desc),
             onClick = {
-                Toast.makeText(context, newsTitle, Toast.LENGTH_SHORT).show()
+                onOpenPage(OverlayPage.TodayNews)
             }
         ),
         ToolItem(
             icon = R.drawable.ic_psychiatry,
-            title = watermarkTitle,
-            subtitle = stringResource(R.string.tools_watermark_desc),
+            title = stringResource(R.string.tool_watermark),
+            subtitle = stringResource(R.string.tool_watermark_desc),
             onClick = {
-                Toast.makeText(context, watermarkTitle, Toast.LENGTH_SHORT).show()
+                onOpenPage(OverlayPage.FuckWatermark)
             }
         ),
     )
@@ -162,7 +176,7 @@ fun DiscoverPage() {
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            Toast.makeText(context, "帮助", Toast.LENGTH_SHORT).show()
+                            showTipsDialog.value = true
                         }
                     ) {
                         Icon(
@@ -187,6 +201,18 @@ fun DiscoverPage() {
                         )
                     }
                 }
+            )
+            TipsDialog  (
+                isOpen = showTipsDialog.value,
+                onClose = { showTipsDialog.value = false },
+                title = "友情提示",
+                message = "本软件仅供个人学习交流和研究参考，严禁用于商业用途，请勿传播，安装后请于 24 小时内删除！",
+                confirmButtonText = "知道了",
+                onConfirm = { },
+                dismissButtonText = null,
+                onDismiss = { },
+                closeIcon = false,
+                onCloseIconClick = { }
             )
         },
     ) { padding ->
