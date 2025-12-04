@@ -105,6 +105,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.cn.lunar)
+    implementation(libs.io.github.carguo.gsyvideoplayer)
 
     implementation(libs.com.squareup.okhttp3)
     implementation(libs.com.squareup.okio)
@@ -121,9 +122,6 @@ dependencies {
     implementation(libs.org.commonmark.ext.strikethrough)
     implementation(libs.org.commonmark.ext.tables)
     implementation(libs.org.commonmark.ext.tasklist)
-
-    implementation(libs.io.github.carguo.gsyvideoplayer.java)
-    implementation(libs.io.github.carguo.gsyvideoplayer.exo2)
 
     // coreLibraryDesugaring(libs.desugar.jdk.libs)
 

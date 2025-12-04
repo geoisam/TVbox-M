@@ -145,7 +145,7 @@ fun HomePage() {
                                 Text(
                                     text = title,
                                     color = if (selectedTab == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                                    fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.SemiBold,
+                                    fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium,
                                 )
                             }
                         )

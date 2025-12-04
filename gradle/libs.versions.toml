@@ -51,7 +51,6 @@ androidx-compose-ui-tooling-preview = {  module = "androidx.compose.ui:ui-toolin
 androidx-compose-ui-test-manifest = {  module = "androidx.compose.ui:ui-test-manifest" }
 androidx-compose-ui-test-junit4 = {  module = "androidx.compose.ui:ui-test-junit4" }
 androidx-compose-material3 = {  module = "androidx.compose.material3:material3" }
-androidx-compose-material3-navigition = {  module = "androidx.compose.material3:material3" }
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
 androidx-compose-animation = { module = "androidx.compose.animation:animation" }
 
@@ -59,6 +58,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines-android" }
 
 cn-lunar = { module = "cn.6tail:lunar", version.ref = "cn-lunar" }
+io-github-carguo-gsyvideoplayer = { module = "io.github.carguo:gsyvideoplayer", version.ref = "io-github-carguo-gsyvideoplayer" }
 
 com-squareup-okhttp3 = { module = "com.squareup.okhttp3:okhttp", version.ref = "com-squareup-okhttp3" }
 com-squareup-okio = { module = "com.squareup.okio:okio", version.ref = "com-squareup-okio" }
@@ -75,10 +75,6 @@ org-commonmark-ext-ins = { module = "org.commonmark:commonmark-ext-ins", version
 org-commonmark-ext-strikethrough = { module = "org.commonmark:commonmark-ext-gfm-strikethrough", version.ref = "org-commonmark" }
 org-commonmark-ext-tables = { module = "org.commonmark:commonmark-ext-gfm-tables", version.ref = "org-commonmark" }
 org-commonmark-ext-tasklist = { module = "org.commonmark:commonmark-ext-task-list-items", version.ref = "org-commonmark" }
-
-io-github-carguo-gsyvideoplayer-java = { module = "io.github.carguo:gsyvideoplayer-java", version.ref = "io-github-carguo-gsyvideoplayer" }
-io-github-carguo-gsyvideoplayer-exo2 = { module = "io.github.carguo:gsyvideoplayer-exo2", version.ref = "io-github-carguo-gsyvideoplayer" }
-io-github-carguo-gsyvideoplayer-ijk = { module = "io.github.carguo:gsyvideoplayer-ex_so", version.ref = "io-github-carguo-gsyvideoplayer" }
 
 desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
 protolite-well-known-types = { group = "com.google.firebase", name = "protolite-well-known-types", version.ref = "protolite-well-known-types" }

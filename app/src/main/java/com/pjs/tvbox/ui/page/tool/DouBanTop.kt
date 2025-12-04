@@ -100,8 +100,7 @@ private fun DouBanTopMain(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 16.dp),
+                .padding(padding),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             DouBanTopView(modifier = Modifier.weight(1f))

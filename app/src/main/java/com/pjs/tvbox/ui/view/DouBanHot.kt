@@ -98,8 +98,8 @@ fun DouBanHotView(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    items(movies, key = { it.id }) { movie ->
-                        MovieCard(movie = movie)
+                    items(movies.size, key = { it }) { index ->
+                        MovieCard(movies[index])
                     }
                 }
             }
@@ -114,7 +114,7 @@ fun MovieCard(movie: Movie) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(0.69f)
+            .aspectRatio(2f / 3f)
             .clip(MaterialTheme.shapes.small)
             .clickable {
                 val url = movie.cover
@@ -196,7 +196,7 @@ fun MovieCard(movie: Movie) {
                         MaterialTheme.colorScheme.onBackground.copy(alpha = 0.78f),
                         RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
                     )
-                    .padding(horizontal = 4.dp, vertical = 4.dp),
+                    .padding(4.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
