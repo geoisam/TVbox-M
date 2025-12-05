@@ -26,7 +26,7 @@
     <string name="tool_timeline">每周新番</string>
     <string name="tool_timeline_desc">bilibili新番时间表</string>
     <string name="tool_anime">番剧热榜</string>
-    <string name="tool_anime_desc">bilibili番剧热度分类榜单</string>
+    <string name="tool_anime_desc">bilibili番剧热播分类榜单</string>
     <string name="tool_ticket">电影票房</string>
     <string name="tool_ticket_desc">CMDB实时票房榜单</string>
     <string name="tool_top">电视收视</string>

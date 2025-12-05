@@ -64,6 +64,7 @@ fun BiliTimelineView(modifier: Modifier = Modifier) {
             PrimaryScrollableTabRow(
                 selectedTabIndex = selectedTabIndex,
                 modifier = Modifier.fillMaxWidth(),
+                edgePadding = 0.dp,
                 divider = {},
             ) {
                 tabs.forEachIndexed { index, date ->
@@ -130,11 +131,19 @@ fun BiliTimelineView(modifier: Modifier = Modifier) {
 @Composable
 private fun AnimeCard(anime: TimelineAnime) {
     val context = LocalContext.current
+    val thumbnailUrl = remember(anime.epCover) {
+        if (anime.epCover.contains("@")) {
+            anime.epCover
+        }
+        else {
+            "${anime.epCover}@300w_200h.webp"
+        }
+    }
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(16f / 9f)
+            .aspectRatio(3f / 2f)
             .clip(MaterialTheme.shapes.small)
             .clickable {
             val url = anime.epCover
@@ -146,7 +155,7 @@ private fun AnimeCard(anime: TimelineAnime) {
         Box {
             SubcomposeAsyncImage(
                 model = ImageRequest.Builder(context)
-                    .data(anime.epCover)
+                    .data(thumbnailUrl)
                     .crossfade(true)
                     .httpHeaders(
                         NetworkHeaders.Builder()

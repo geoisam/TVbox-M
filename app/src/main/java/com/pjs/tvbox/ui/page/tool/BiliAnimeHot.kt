@@ -101,9 +101,7 @@ private fun BiliAnimeHotMain(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+                .padding(padding),
         ) {
             BiliAnimeHotView(modifier = Modifier.weight(1f))
         }

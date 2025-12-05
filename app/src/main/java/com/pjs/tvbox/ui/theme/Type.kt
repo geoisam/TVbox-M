@@ -14,51 +14,51 @@ val LogoFont = FontFamily(
 
 val typography = Typography(
     displayLarge = TextStyle(
-        fontSize = 56.sp,
+        fontSize = 66.sp,
         letterSpacing = 0.sp,
     ),
     displayMedium = TextStyle(
-        fontSize = 45.sp,
+        fontSize = 55.sp,
         letterSpacing = 0.sp,
     ),
     displaySmall = TextStyle(
-        fontSize = 36.sp,
+        fontSize = 44.sp,
         letterSpacing = 0.sp,
     ),
     headlineLarge = TextStyle(
-        fontSize = 32.sp,
+        fontSize = 36.sp,
         letterSpacing = 0.sp,
     ),
     headlineMedium = TextStyle(
-        fontSize = 28.sp,
+        fontSize = 32.sp,
         letterSpacing = 0.sp,
     ),
     headlineSmall = TextStyle(
-        fontSize = 24.sp,
+        fontSize = 28.sp,
         letterSpacing = 0.sp,
     ),
     titleLarge = TextStyle(
-        fontSize = 22.sp,
+        fontSize = 24.sp,
         letterSpacing = 0.sp,
     ),
     titleMedium = TextStyle(
-        fontSize = 16.sp,
+        fontSize = 22.sp,
         letterSpacing = 0.sp,
     ),
     titleSmall = TextStyle(
-        fontSize = 14.sp,
+        fontSize = 20.sp,
         letterSpacing = 0.sp,
     ),
     bodyLarge = TextStyle(
-        fontSize = 16.sp,
+        fontSize = 18.sp,
         letterSpacing = 0.sp,
     ),
     bodyMedium = TextStyle(
-        fontSize = 14.sp,
+        fontSize = 16.sp,
         letterSpacing = 0.sp,
     ),
     bodySmall = TextStyle(
-        fontSize = 12.sp,
+        fontSize = 15.sp,
         letterSpacing = 0.sp,
     ),
     labelLarge = TextStyle(

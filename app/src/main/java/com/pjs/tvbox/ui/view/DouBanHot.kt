@@ -117,7 +117,7 @@ fun MovieCard(movie: Movie) {
             .aspectRatio(2f / 3f)
             .clip(MaterialTheme.shapes.small)
             .clickable {
-                val url = movie.cover
+                val url = movie.coverLarge
                 val intent = Intent(Intent.ACTION_VIEW, url.toUri())
                 context.startActivity(intent)
             },
