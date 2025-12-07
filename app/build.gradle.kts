@@ -104,7 +104,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.android)
 
-    implementation(libs.cn.lunar)
+    implementation(libs.com.nlf.calendar)
     implementation(libs.org.apache.commons.text)
     implementation(libs.io.github.carguo.gsyvideoplayer)
 

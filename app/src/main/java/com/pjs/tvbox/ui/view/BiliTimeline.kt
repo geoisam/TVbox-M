@@ -210,7 +210,7 @@ private fun AnimeCard(anime: TimelineAnime) {
                         modifier = Modifier
                             .align(Alignment.TopStart)
                             .background(
-                                MaterialTheme.colorScheme.primary.copy(alpha = 0.78f),
+                                Color(0xfffb7299).copy(alpha = 0.78f),
                                 RoundedCornerShape(topStart = 8.dp, bottomEnd = 8.dp)
                             )
                             .padding(horizontal = 7.dp, vertical = 3.dp),
@@ -219,7 +219,7 @@ private fun AnimeCard(anime: TimelineAnime) {
                         Text(
                             text = anime.pubTime + " 更新",
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onPrimary,
+                            color = Color.White,
                         )
                     }
                 }
@@ -227,7 +227,7 @@ private fun AnimeCard(anime: TimelineAnime) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .align(Alignment.BottomCenter)
+                            .align(Alignment.BottomEnd)
                             .background(
                                 brush = androidx.compose.ui.graphics.Brush.verticalGradient(
                                     colors = listOf(
@@ -236,8 +236,8 @@ private fun AnimeCard(anime: TimelineAnime) {
                                     )
                                 )
                             )
-                            .padding(4.dp),
-                        contentAlignment = Alignment.Center
+                            .padding(horizontal = 7.dp, vertical = 3.dp),
+                        contentAlignment = Alignment.CenterEnd
                     ) {
                         Text(
                             text = anime.pubIndex,
@@ -259,7 +259,7 @@ private fun AnimeCard(anime: TimelineAnime) {
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.fillMaxWidth()
                 .padding(top = 4.dp)
-                .align(Alignment.CenterHorizontally),
+                .wrapContentWidth(Alignment.CenterHorizontally),
         )
     }
 }

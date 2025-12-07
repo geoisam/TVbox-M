@@ -17,7 +17,7 @@ androidx-compose-bom = "2025.11.01"
 kotlinx-serialization-json = "1.9.0"
 kotlinx-coroutines-android = "1.10.2"
 
-cn-lunar = "1.7.7"
+com-nlf-calendar = "1.7.7"
 org-apache-commons-text = "1.14.0"
 com-squareup-okhttp3 = "5.3.2"
 com-squareup-okio = "3.16.4"
@@ -58,7 +58,7 @@ androidx-compose-animation = { module = "androidx.compose.animation:animation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines-android" }
 
-cn-lunar = { module = "cn.6tail:lunar", version.ref = "cn-lunar" }
+com-nlf-calendar = { module = "cn.6tail:lunar", version.ref = "com-nlf-calendar" }
 org-apache-commons-text = { module = "org.apache.commons:commons-text", version.ref = "org-apache-commons-text" }
 io-github-carguo-gsyvideoplayer = { module = "io.github.carguo:gsyvideoplayer", version.ref = "io-github-carguo-gsyvideoplayer" }
 

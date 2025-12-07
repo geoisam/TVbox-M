@@ -27,7 +27,7 @@ import com.pjs.tvbox.ui.view.HomeTopView
 fun HomePage() {
     val context = LocalContext.current
     var selectedTab by remember { mutableIntStateOf(1) }
-    val tabs = listOf("置顶", "首页", "订阅")
+    val tabs = listOf("置顶", "推荐", "订阅")
     val dataName = "暂无订阅"
 
     Scaffold(

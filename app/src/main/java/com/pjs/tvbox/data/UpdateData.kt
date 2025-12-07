@@ -17,16 +17,10 @@ import java.io.File
 import kotlin.String
 
 object UpdateData {
-    private lateinit var appContext: Context
-
     private val json = Json {
         ignoreUnknownKeys = true
         coerceInputValues = true
         isLenient = true
-    }
-
-    fun initContext(context: Context) {
-        appContext = context.applicationContext
     }
 
     fun extractContent(input: String): String? {
@@ -40,7 +34,7 @@ object UpdateData {
         "https://share.note.youdao.com/yws/api/note/d56e2e56e3434f73519e10dc3b831662?sev=j1&cstk=LnuyBs-w"
     private const val GITHUB = "https://api.github.com/repos/geoisam/TVB-Mobile/releases"
 
-    suspend fun getUpdate(): Update? = runCatching {
+    suspend fun getUpdate(context: Context): Update? = runCatching {
         val response = PJS.request(
             PJSRequest(
                 url = NOTE,
@@ -57,16 +51,16 @@ object UpdateData {
 
         val contentEscaped = rootJson["content"]?.jsonPrimitive?.content ?: return@runCatching null
         val encryptedText = extractContent(contentEscaped) ?: return@runCatching null
-        val decryptedJson = CryptoUtil.decrypt(encryptedText) ?: return@runCatching null
-
         runCatching {
-            val dir = appContext.getExternalFilesDir(null)
-            val file = File(dir, "update.txt")
-            if (dir == null) { return@runCatching }
-            dir.mkdirs()
-            file.writeText( decryptedJson, Charsets.UTF_8 )
-        }
+            val baseDir = context.getExternalFilesDir(null) ?: return@runCatching
+            val targetDir = File(baseDir, "logs")
 
+            if (!targetDir.exists()) {
+                targetDir.mkdirs()
+            }
+            File(targetDir, "update.txt").writeText( encryptedText, Charsets.UTF_8 )
+        }
+        val decryptedJson = CryptoUtil.decrypt(encryptedText) ?: return@runCatching null
         val updateArray =
             json.parseToJsonElement(decryptedJson).jsonArray.takeIf { it.isNotEmpty() }
                 ?: return@runCatching null

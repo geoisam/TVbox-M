@@ -52,13 +52,10 @@ object LunarUtil {
 
     fun getWeek(): String {
         val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
-        val solar = Solar.fromYmdHms(
+        val solar = Solar.fromYmd(
             timeNow.year,
             timeNow.monthValue,
             timeNow.dayOfMonth,
-            timeNow.hour,
-            timeNow.minute,
-            timeNow.second
         )
         return "星期${solar.weekInChinese}"
     }
@@ -73,6 +70,32 @@ object LunarUtil {
         val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
         val lunar = Lunar.fromDate(Date.from(timeNow.toInstant()))
         return "${lunar.yearInGanZhi}${lunar.yearShengXiao}年 ${lunar.monthInGanZhi}${lunar.monthShengXiao}月 ${lunar.dayInGanZhi}${lunar.dayShengXiao}日"
+    }
+
+    fun getJieQi(): String {
+        val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
+        val lunar = Lunar.fromDate(Date.from(timeNow.toInstant()))
+        return lunar.jieQi
+    }
+
+    fun getDayYi(): String {
+        val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
+        val lunar = Lunar.fromDate(Date.from(timeNow.toInstant()))
+        val yiString = lunar.dayYi?.joinToString(" ") ?: "无"
+        return yiString
+    }
+
+    fun getDayJi(): String {
+        val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
+        val lunar = Lunar.fromDate(Date.from(timeNow.toInstant()))
+        val jiString = lunar.dayJi?.joinToString(" ") ?: "无"
+        return jiString
+    }
+
+    fun getDayChong(): String {
+        val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
+        val lunar = Lunar.fromDate(Date.from(timeNow.toInstant()))
+        return "${lunar.dayShengXiao}日冲${lunar.dayChongShengXiao}(${lunar.dayChongGan}${lunar.dayChong}) 煞${lunar.daySha}"
     }
 
     fun getShiChen(): String {

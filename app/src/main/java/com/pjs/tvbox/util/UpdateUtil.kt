@@ -3,15 +3,26 @@ package com.pjs.tvbox.util
 import com.pjs.tvbox.model.Update
 
 object UpdateUtil {
-    private var pendingUpdate: Update? = null
+    private var updateInfo: Update? = null
+    private var hasReadUpdate = false
 
-    fun setUpdate(update: Update) {
-        pendingUpdate = update
+    fun currentUpdate(): Update? = updateInfo
+
+    fun setUpdate(update: Update?) {
+        updateInfo = update
+        hasReadUpdate = false
     }
 
-    fun consumeUpdate(): Update? {
-        val update = pendingUpdate
-        pendingUpdate = null
-        return update
+    fun markDialogShown() {
+        hasReadUpdate = true
+    }
+
+    fun shouldShowDialog(): Boolean {
+        return updateInfo != null && !hasReadUpdate
+    }
+
+    fun clearUpdate() {
+        updateInfo = null
+        hasReadUpdate = false
     }
 }

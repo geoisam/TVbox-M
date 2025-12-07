@@ -3,6 +3,7 @@ package com.pjs.tvbox
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -41,9 +42,17 @@ class SplashActivity : ComponentActivity() {
             MaterialTheme {
                 SplashScreen {
                     lifecycleScope.launch {
-                        val update = UpdateData.getUpdate()
-                        if (update != null && shouldShowUpdate(update)) {
-                            UpdateUtil.setUpdate(update)
+                        val update = UpdateData.getUpdate(this@SplashActivity)
+                        if (update != null) {
+                            val remoteVersionName = update.versionName.replace(".", "").toLongOrNull() ?: 0L
+                            val localVersionName = AppUtil.getVersionName(this@SplashActivity).replace(".", "").toLongOrNull() ?: 0L
+                            if (remoteVersionName > localVersionName) {
+                                UpdateUtil.setUpdate(update)
+                            } else {
+                                UpdateUtil.clearUpdate()
+                            }
+                        } else {
+                            Toast.makeText(this@SplashActivity, "检测更新失败！", Toast.LENGTH_SHORT).show()
                         }
                         startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                         finish()
@@ -51,13 +60,6 @@ class SplashActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    private fun shouldShowUpdate(update: Update): Boolean {
-        val remoteVersionName = update.versionName.replace(".", "").toLongOrNull() ?: return false
-        val localVersionName =
-            AppUtil.getVersionName(this).replace(".", "").toLongOrNull() ?: return false
-        return remoteVersionName > localVersionName
     }
 }
 

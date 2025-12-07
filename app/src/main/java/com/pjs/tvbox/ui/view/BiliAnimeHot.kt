@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -215,7 +216,7 @@ fun AnimeHotCard(anime: AnimeHot) {
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .background(
-                                MaterialTheme.colorScheme.primary.copy(alpha = 0.78f),
+                                Color(0xfffb7299).copy(alpha = 0.78f),
                                 RoundedCornerShape(bottomStart = 8.dp, topEnd = 8.dp)
                             )
                             .padding(horizontal = 7.dp, vertical = 3.dp),
@@ -224,7 +225,7 @@ fun AnimeHotCard(anime: AnimeHot) {
                         Text(
                             text = anime.rating + "分",
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onPrimary,
+                            color = Color.White,
                         )
                     }
                 }
@@ -232,7 +233,7 @@ fun AnimeHotCard(anime: AnimeHot) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .align(Alignment.BottomCenter)
+                            .align(Alignment.BottomEnd)
                             .background(
                                 brush = androidx.compose.ui.graphics.Brush.verticalGradient(
                                     colors = listOf(
@@ -241,8 +242,8 @@ fun AnimeHotCard(anime: AnimeHot) {
                                     )
                                 )
                             )
-                            .padding(4.dp),
-                        contentAlignment = Alignment.Center
+                            .padding(horizontal = 7.dp, vertical = 3.dp),
+                        contentAlignment = Alignment.CenterEnd
                     ) {
                         Text(
                             text = anime.indexShow,
@@ -264,7 +265,7 @@ fun AnimeHotCard(anime: AnimeHot) {
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.fillMaxWidth()
                 .padding(top = 4.dp)
-                .align(Alignment.CenterHorizontally),
+                .wrapContentWidth(Alignment.CenterHorizontally),
         )
     }
 }

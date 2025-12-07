@@ -4,17 +4,21 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.text.format.Formatter
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -22,13 +26,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import com.pjs.tvbox.R
 import com.pjs.tvbox.OverlayPage
+import com.pjs.tvbox.data.UpdateData
+import com.pjs.tvbox.model.Update
 import com.pjs.tvbox.ui.dialog.TipsDialog
 import com.pjs.tvbox.ui.theme.LogoFont
 import com.pjs.tvbox.util.LunarUtil
+import com.pjs.tvbox.util.AppUtil
+import com.pjs.tvbox.util.UpdateUtil
+import kotlinx.coroutines.Dispatchers
 import java.util.Calendar
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +49,11 @@ fun MinePage(
 ) {
     val context = LocalContext.current
     val showTipsDialog = remember { mutableStateOf(false) }
+    val showUpdateDialog = remember { mutableStateOf(false) }
     val dateState = remember { mutableStateMapOf<String, String>() }
+    var updateInfo by remember { mutableStateOf<Update?>(null) }
+    val isChecking = remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     fun updateDateState() {
         dateState["yearMonth"] = LunarUtil.getYearMonth()
@@ -46,9 +62,14 @@ fun MinePage(
         dateState["day"] = LunarUtil.getDay()
         dateState["monthDay"] = LunarUtil.getMonthDay()
         dateState["ganZhi"] = LunarUtil.getGanZhi()
+        dateState["jieQi"] = LunarUtil.getJieQi()
+        dateState["dayYi"] = LunarUtil.getDayYi()
+        dateState["dayJi"] = LunarUtil.getDayJi()
+        dateState["dayChong"] = LunarUtil.getDayChong()
     }
 
     LaunchedEffect(Unit) {
+        UpdateUtil.currentUpdate()?.let { updateInfo = it }
         updateDateState()
         while (true) {
             delay(calculateTimeToNextHour())
@@ -147,10 +168,7 @@ fun MinePage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(MaterialTheme.shapes.small)
-                        .clickable {
-                            updateDateState()
-                            Toast.makeText(context, "日历时间已更新", Toast.LENGTH_SHORT).show()
-                        },
+                        .clickable { },
                     shape = MaterialTheme.shapes.small,
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -173,7 +191,7 @@ fun MinePage(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
                                 Text(
-                                    text = dateState["yearMonth"] ?: "2002 年 1 月",
+                                    text = dateState["yearMonth"] ?: "阳历年 阳历月",
                                     style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     fontWeight = FontWeight.Bold,
@@ -188,15 +206,33 @@ fun MinePage(
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
-                                        text = dateState["shiChen"] ?: "null",
+                                        text = dateState["shiChen"] ?: "时辰",
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onPrimary,
                                         fontWeight = FontWeight.Bold,
                                     )
                                 }
+                                if (dateState["jieQi"]?.isNotBlank() == true) {
+                                    Box(
+                                        modifier = Modifier
+                                            .background(
+                                                MaterialTheme.colorScheme.primary.copy(alpha = 0.78f),
+                                                MaterialTheme.shapes.medium
+                                            )
+                                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = dateState["jieQi"] ?: "节气",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onPrimary,
+                                            fontWeight = FontWeight.Bold,
+                                        )
+                                    }
+                                }
                             }
                             Text(
-                                text = dateState["week"] ?: "星期二",
+                                text = dateState["week"] ?: "星期",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 fontWeight = FontWeight.Bold,
@@ -204,23 +240,123 @@ fun MinePage(
                         }
                         Spacer(modifier = Modifier.height(18.dp))
                         Text(
-                            text = dateState["day"] ?: "29",
+                            text = dateState["day"] ?: "阳历日",
                             style = MaterialTheme.typography.displayLarge,
                             color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold,
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = dateState["monthDay"] ?: "腊月十七",
+                            text = dateState["monthDay"] ?: "阴历月日",
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Bold,
                         )
                         Text(
-                            text = dateState["ganZhi"] ?: "辛巳蛇年 辛丑牛月 丁酉鸡日",
+                            text = dateState["ganZhi"] ?: "年干支 月干支 日干支",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
+                    }
+                }
+            }
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(MaterialTheme.shapes.small)
+                        .clickable { },
+                    shape = MaterialTheme.shapes.small,
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ){
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        Color(0xff00b51d).copy(alpha = 0.78f),
+                                        CircleShape,
+                                    )
+                                    .padding(horizontal = 4.dp, vertical = 2.dp),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Text(
+                                    text = "宜",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                            }
+                            Text(
+                                text = dateState["dayYi"] ?: "无",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ){
+                            Box(
+
+                                modifier = Modifier
+                                    .background(
+                                        Color(0xffff2442).copy(alpha = 0.78f),
+                                        CircleShape
+                                    )
+                                    .padding(horizontal = 4.dp, vertical = 2.dp),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Text(
+                                    text = "忌",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                            }
+                            Text(
+                                text = dateState["dayJi"] ?: "无",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ){
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        Color(0xffff6700).copy(alpha = 0.78f),
+                                        CircleShape
+                                    )
+                                    .padding(horizontal = 4.dp, vertical = 2.dp),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Text(
+                                    text = "冲",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                            }
+                            Text(
+                                text = dateState["dayChong"] ?: "冲煞",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
                     }
                 }
             }
@@ -335,16 +471,72 @@ fun MinePage(
                                 )
                             },
                             trailingContent = {
-                                Text(
-                                    text = "已是最新版本",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
+                                if (isChecking.value) {
+                                    CircularProgressIndicator()
+                                }else {
+                                    if (updateInfo == null) {
+                                        Text(
+                                            text = "已是最新版本",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                    } else {
+                                        Box(
+                                            modifier = Modifier
+                                                .background(
+                                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.78f),
+                                                    MaterialTheme.shapes.large
+                                                )
+                                                .padding(horizontal = 7.dp, vertical = 3.dp),
+                                            contentAlignment = Alignment.Center,
+                                        ) {
+                                            Text(
+                                                text = "发现新版本",
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onPrimary,
+                                            )
+                                        }
+                                    }
+                                }
                             },
                             modifier = Modifier
                                 .clickable {
-                                    Toast.makeText(context, "检测更新", Toast.LENGTH_SHORT)
-                                        .show()
+                                    if (isChecking.value) return@clickable
+                                    if(updateInfo != null){
+                                        showUpdateDialog.value = true
+                                    } else {
+                                        isChecking.value = true
+                                        scope.launch {
+                                            try {
+                                            UpdateUtil.clearUpdate()
+                                            updateInfo = UpdateData.getUpdate(context)
+
+                                                withContext(Dispatchers.Main) {
+                                                    if (updateInfo != null) {
+                                                        val remoteVersionName = updateInfo?.versionName?.replace(".", "")?.toLongOrNull() ?: 0L
+                                                        val localVersionName = AppUtil.getVersionName(context).replace(".", "").toLongOrNull() ?: 0L
+                                                        if (remoteVersionName > localVersionName) {
+                                                            showUpdateDialog.value = true
+                                                        } else {
+                                                            Toast.makeText(
+                                                                context,
+                                                                "已是最新版本！",
+                                                                Toast.LENGTH_SHORT
+                                                            ).show()
+                                                        }
+                                                    } else {
+                                                        Toast.makeText(context, "检测更新失败！", Toast.LENGTH_SHORT).show()
+                                                    }
+                                                }
+                                            } catch (e: Exception) {
+                                                withContext(Dispatchers.Main) {
+                                                    Toast.makeText(context, "检测更新失败！", Toast.LENGTH_SHORT).show()
+                                                }
+                                            } finally {
+                                                isChecking.value = false
+                                            }
+                                        }
+                                    }
                                 },
                             colors = ListItemDefaults.colors(
                                 containerColor = MaterialTheme.colorScheme.surfaceContainer
@@ -386,6 +578,29 @@ fun MinePage(
                 }
                 Spacer(modifier = Modifier.height(18.dp))
             }
+        }
+        updateInfo?.let { update ->
+            TipsDialog(
+                isOpen = showUpdateDialog.value,
+                onClose = { showUpdateDialog.value = false },
+                title = "发现新版本 v${update.versionName}",
+                message = "版本：${update.versionCode}\n" +
+                        "大小：${Formatter.formatFileSize(LocalContext.current, update.appSize)}\n" +
+                        "\n更新日志：\n${update.changeLog.ifBlank { "修复了一些已知问题" }}".trimIndent(),
+                confirmButtonText = "更新",
+                onConfirm = {
+                    val url = when {
+                        update.downloadUrl.startsWith("http") -> update.downloadUrl
+                        else -> "https://github.com/geoisam/TVB-Mobile/releases"
+                    }
+                    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+                    context.startActivity(intent)
+                },
+                dismissButtonText = "取消",
+                onDismiss = { showUpdateDialog.value = false },
+                closeIcon = false,
+                onCloseIconClick = { showUpdateDialog.value = false },
+            )
         }
     }
 
