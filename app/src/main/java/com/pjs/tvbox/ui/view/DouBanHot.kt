@@ -185,7 +185,7 @@ fun MovieCard(movie: Movie) {
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .background(
-                                Color(0xff00b51d).copy(alpha = 0.78f),
+                                Color(0xFF2BA245).copy(alpha = 0.88f),
                                 RoundedCornerShape(bottomStart = 8.dp, topEnd = 8.dp)
                             )
                             .padding(horizontal = 7.dp, vertical = 3.dp),
@@ -207,7 +207,7 @@ fun MovieCard(movie: Movie) {
                                 brush = androidx.compose.ui.graphics.Brush.verticalGradient(
                                     colors = listOf(
                                         Color.Transparent,
-                                        Color.Black.copy(alpha = 0.78f)
+                                        Color.Black.copy(alpha = 0.88f)
                                     )
                                 )
                             )
@@ -232,7 +232,8 @@ fun MovieCard(movie: Movie) {
             fontWeight = FontWeight.SemiBold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(top = 4.dp)
                 .wrapContentWidth(Alignment.CenterHorizontally),
         )

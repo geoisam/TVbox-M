@@ -1,6 +1,8 @@
 package com.pjs.tvbox.ui.page
 
 import android.content.BroadcastReceiver
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -23,8 +25,11 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.pjs.tvbox.R
@@ -35,6 +40,7 @@ import com.pjs.tvbox.ui.dialog.TipsDialog
 import com.pjs.tvbox.ui.theme.LogoFont
 import com.pjs.tvbox.util.LunarUtil
 import com.pjs.tvbox.util.AppUtil
+import com.pjs.tvbox.util.FestivalModel
 import com.pjs.tvbox.util.UpdateUtil
 import kotlinx.coroutines.Dispatchers
 import java.util.Calendar
@@ -48,24 +54,33 @@ fun MinePage(
     onOpenPage: (OverlayPage) -> Unit
 ) {
     val context = LocalContext.current
+    val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    var showSheet by remember { mutableStateOf(false) }
     val showTipsDialog = remember { mutableStateOf(false) }
     val showUpdateDialog = remember { mutableStateOf(false) }
     val dateState = remember { mutableStateMapOf<String, String>() }
+    val nextFestival = remember { mutableStateOf<FestivalModel?>(null) }
     var updateInfo by remember { mutableStateOf<Update?>(null) }
     val isChecking = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
     fun updateDateState() {
-        dateState["yearMonth"] = LunarUtil.getYearMonth()
-        dateState["shiChen"] = LunarUtil.getShiChen()
-        dateState["week"] = LunarUtil.getWeek()
-        dateState["day"] = LunarUtil.getDay()
-        dateState["monthDay"] = LunarUtil.getMonthDay()
-        dateState["ganZhi"] = LunarUtil.getGanZhi()
-        dateState["jieQi"] = LunarUtil.getJieQi()
-        dateState["dayYi"] = LunarUtil.getDayYi()
-        dateState["dayJi"] = LunarUtil.getDayJi()
-        dateState["dayChong"] = LunarUtil.getDayChong()
+        dateState["YearMonth"] = LunarUtil.getYearMonth()
+        dateState["ShiChen"] = LunarUtil.getShiChen()
+        dateState["Week"] = LunarUtil.getWeek()
+        dateState["Day"] = LunarUtil.getDay()
+        dateState["MonthDay"] = LunarUtil.getMonthDay()
+        dateState["GanZhi"] = LunarUtil.getGanZhi()
+        dateState["JieQi"] = LunarUtil.getJieQi()
+        dateState["Festivals"] = LunarUtil.getFestivals()
+        dateState["DayYi"] = LunarUtil.getDayYi()
+        dateState["DayJi"] = LunarUtil.getDayJi()
+        dateState["DayChong"] = LunarUtil.getDayChong()
+        dateState["PengZu"] = LunarUtil.getPengZu()
+        dateState["DayXi"] = LunarUtil.getDayXi()
+        dateState["DayCai"] = LunarUtil.getDayCai()
+        dateState["DayFu"] = LunarUtil.getDayFu()
+        nextFestival.value = LunarUtil.getNextFestival()
     }
 
     LaunchedEffect(Unit) {
@@ -168,7 +183,7 @@ fun MinePage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(MaterialTheme.shapes.small)
-                        .clickable { },
+                        .clickable { showSheet = true },
                     shape = MaterialTheme.shapes.small,
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
@@ -191,7 +206,7 @@ fun MinePage(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
                                 Text(
-                                    text = dateState["yearMonth"] ?: "阳历年 阳历月",
+                                    text = dateState["YearMonth"] ?: "阳历年 阳历月",
                                     style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.onSurface,
                                     fontWeight = FontWeight.Bold,
@@ -199,20 +214,20 @@ fun MinePage(
                                 Box(
                                     modifier = Modifier
                                         .background(
-                                            MaterialTheme.colorScheme.primary.copy(alpha = 0.78f),
+                                            MaterialTheme.colorScheme.primary.copy(alpha = 0.88f),
                                             MaterialTheme.shapes.medium
                                         )
                                         .padding(horizontal = 8.dp, vertical = 4.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
-                                        text = dateState["shiChen"] ?: "时辰",
-                                        style = MaterialTheme.typography.labelSmall,
+                                        text = dateState["ShiChen"] ?: "时辰",
+                                        style = MaterialTheme.typography.labelMedium,
                                         color = MaterialTheme.colorScheme.onPrimary,
-                                        fontWeight = FontWeight.Bold,
+                                        fontWeight = FontWeight.SemiBold,
                                     )
                                 }
-                                if (dateState["jieQi"]?.isNotBlank() == true) {
+                                if (dateState["JieQi"]?.isNotBlank() == true) {
                                     Box(
                                         modifier = Modifier
                                             .background(
@@ -223,16 +238,34 @@ fun MinePage(
                                         contentAlignment = Alignment.Center
                                     ) {
                                         Text(
-                                            text = dateState["jieQi"] ?: "节气",
-                                            style = MaterialTheme.typography.labelSmall,
+                                            text = dateState["JieQi"] ?: "节气",
+                                            style = MaterialTheme.typography.labelMedium,
                                             color = MaterialTheme.colorScheme.onPrimary,
-                                            fontWeight = FontWeight.Bold,
+                                            fontWeight = FontWeight.SemiBold,
+                                        )
+                                    }
+                                }
+                                if (dateState["Festivals"]?.isNotBlank() == true) {
+                                    Box(
+                                        modifier = Modifier
+                                            .background(
+                                                MaterialTheme.colorScheme.primary.copy(alpha = 0.69f),
+                                                MaterialTheme.shapes.medium
+                                            )
+                                            .padding(horizontal = 8.dp, vertical = 4.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = dateState["Festivals"] ?: "节日",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = MaterialTheme.colorScheme.onPrimary,
+                                            fontWeight = FontWeight.SemiBold,
                                         )
                                     }
                                 }
                             }
                             Text(
-                                text = dateState["week"] ?: "星期",
+                                text = dateState["Week"] ?: "星期",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 fontWeight = FontWeight.Bold,
@@ -240,123 +273,23 @@ fun MinePage(
                         }
                         Spacer(modifier = Modifier.height(18.dp))
                         Text(
-                            text = dateState["day"] ?: "阳历日",
+                            text = dateState["Day"] ?: "阳历日",
                             style = MaterialTheme.typography.displayLarge,
                             color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold,
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = dateState["monthDay"] ?: "阴历月日",
+                            text = dateState["MonthDay"] ?: "阴历月日",
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Bold,
                         )
                         Text(
-                            text = dateState["ganZhi"] ?: "年干支 月干支 日干支",
+                            text = dateState["GanZhi"] ?: "年干支 月干支 日干支",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                    }
-                }
-            }
-            item {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(MaterialTheme.shapes.small)
-                        .clickable { },
-                    shape = MaterialTheme.shapes.small,
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 12.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        ){
-                            Box(
-                                modifier = Modifier
-                                    .background(
-                                        Color(0xff00b51d).copy(alpha = 0.78f),
-                                        CircleShape,
-                                    )
-                                    .padding(horizontal = 4.dp, vertical = 2.dp),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Text(
-                                    text = "宜",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold,
-                                )
-                            }
-                            Text(
-                                text = dateState["dayYi"] ?: "无",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        ){
-                            Box(
-
-                                modifier = Modifier
-                                    .background(
-                                        Color(0xffff2442).copy(alpha = 0.78f),
-                                        CircleShape
-                                    )
-                                    .padding(horizontal = 4.dp, vertical = 2.dp),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Text(
-                                    text = "忌",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold,
-                                )
-                            }
-                            Text(
-                                text = dateState["dayJi"] ?: "无",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        ){
-                            Box(
-                                modifier = Modifier
-                                    .background(
-                                        Color(0xffff6700).copy(alpha = 0.78f),
-                                        CircleShape
-                                    )
-                                    .padding(horizontal = 4.dp, vertical = 2.dp),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Text(
-                                    text = "冲",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = Color.White,
-                                    fontWeight = FontWeight.Bold,
-                                )
-                            }
-                            Text(
-                                text = dateState["dayChong"] ?: "冲煞",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
                     }
                 }
             }
@@ -473,7 +406,7 @@ fun MinePage(
                             trailingContent = {
                                 if (isChecking.value) {
                                     CircularProgressIndicator()
-                                }else {
+                                } else {
                                     if (updateInfo == null) {
                                         Text(
                                             text = "已是最新版本",
@@ -502,35 +435,50 @@ fun MinePage(
                             modifier = Modifier
                                 .clickable {
                                     if (isChecking.value) return@clickable
-                                    if(updateInfo != null){
+                                    if (updateInfo != null) {
                                         showUpdateDialog.value = true
                                     } else {
                                         isChecking.value = true
                                         scope.launch {
                                             try {
-                                            UpdateUtil.clearUpdate()
-                                            updateInfo = UpdateData.getUpdate(context)
+                                                UpdateUtil.clearUpdate()
+                                                updateInfo = UpdateData.getUpdate(context)
 
                                                 withContext(Dispatchers.Main) {
                                                     if (updateInfo != null) {
-                                                        val remoteVersionName = updateInfo?.versionName?.replace(".", "")?.toLongOrNull() ?: 0L
-                                                        val localVersionName = AppUtil.getVersionName(context).replace(".", "").toLongOrNull() ?: 0L
+                                                        val remoteVersionName =
+                                                            updateInfo?.versionName?.replace(
+                                                                ".",
+                                                                ""
+                                                            )?.toLongOrNull() ?: 0L
+                                                        val localVersionName =
+                                                            AppUtil.getVersionName(context)
+                                                                .replace(".", "").toLongOrNull()
+                                                                ?: 0L
                                                         if (remoteVersionName > localVersionName) {
                                                             showUpdateDialog.value = true
                                                         } else {
                                                             Toast.makeText(
                                                                 context,
-                                                                "已是最新版本！",
+                                                                "已是最新版本",
                                                                 Toast.LENGTH_SHORT
                                                             ).show()
                                                         }
                                                     } else {
-                                                        Toast.makeText(context, "检测更新失败！", Toast.LENGTH_SHORT).show()
+                                                        Toast.makeText(
+                                                            context,
+                                                            "检测更新失败",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
                                                     }
                                                 }
                                             } catch (e: Exception) {
                                                 withContext(Dispatchers.Main) {
-                                                    Toast.makeText(context, "检测更新失败！", Toast.LENGTH_SHORT).show()
+                                                    Toast.makeText(
+                                                        context,
+                                                        "检测更新失败",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
                                                 }
                                             } finally {
                                                 isChecking.value = false
@@ -579,14 +527,365 @@ fun MinePage(
                 Spacer(modifier = Modifier.height(18.dp))
             }
         }
+        if (showSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showSheet = false },
+                sheetState = rememberModalBottomSheetState()
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    nextFestival.value?.let { jieri ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(MaterialTheme.shapes.small)
+                                .clickable { },
+                            shape = MaterialTheme.shapes.small,
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            )
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Column(
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(
+                                        text = jieri.name,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        fontWeight = FontWeight.Bold,
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = "${jieri.date} (周${jieri.weekday})",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
+
+                                Text(
+                                    text = buildAnnotatedString {
+                                        withStyle(
+                                            SpanStyle(
+                                                fontSize = MaterialTheme.typography.headlineMedium.fontSize,
+                                                color = MaterialTheme.colorScheme.primary,
+                                                fontWeight = FontWeight.Bold,
+                                            )
+                                        ) {
+                                            append(jieri.daysLeft.toString())
+                                        }
+                                        append(" ")
+                                        withStyle(
+                                            SpanStyle(
+                                                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                                                color = MaterialTheme.colorScheme.onSurface,
+                                            )
+                                        ) {
+                                            append("天")
+                                        }
+                                    },
+                                    modifier = Modifier.align(Alignment.CenterVertically)
+                                )
+                            }
+                        }
+                    }
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(MaterialTheme.shapes.small)
+                            .clickable { },
+                        shape = MaterialTheme.shapes.small,
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 12.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .background(
+                                            Color(0xFF1772F6),
+                                            MaterialTheme.shapes.medium,
+                                        )
+                                        .padding(horizontal = 7.dp, vertical = 3.dp),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Text(
+                                        text = "宜",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.SemiBold,
+                                    )
+                                }
+                                Text(
+                                    text = dateState["DayYi"] ?: "无",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Box(
+
+                                    modifier = Modifier
+                                        .background(
+                                            Color(0xFF808080),
+                                            MaterialTheme.shapes.medium,
+                                        )
+                                        .padding(horizontal = 7.dp, vertical = 3.dp),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Text(
+                                        text = "忌",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.SemiBold,
+                                    )
+                                }
+                                Text(
+                                    text = dateState["DayJi"] ?: "无",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                        }
+                    }
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(MaterialTheme.shapes.small)
+                            .clickable { },
+                        shape = MaterialTheme.shapes.small,
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 12.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .background(
+                                            Color(0xFFFF6700),
+                                            MaterialTheme.shapes.medium,
+                                        )
+                                        .padding(horizontal = 7.dp, vertical = 3.dp),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Text(
+                                        text = "冲煞",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.SemiBold,
+                                    )
+                                }
+                                Text(
+                                    text = dateState["DayChong"] ?: "无",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .background(
+                                            Color(0xFF8B4513),
+                                            MaterialTheme.shapes.medium,
+                                        )
+                                        .padding(horizontal = 7.dp, vertical = 3.dp),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Text(
+                                        text = "彭祖",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.SemiBold,
+                                    )
+                                }
+                                Text(
+                                    text = dateState["PengZu"] ?: "无",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                        }
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        Card(
+                            modifier = Modifier.weight(1f)
+                                .clip(MaterialTheme.shapes.small)
+                                .clickable { },
+                            shape = MaterialTheme.shapes.small,
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer
+                            )
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .background(
+                                            Color(0xFFFF2442),
+                                            CircleShape
+                                        )
+                                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Text(
+                                        text = "喜",
+                                        style = MaterialTheme.typography.headlineSmall,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.SemiBold,
+                                    )
+                                }
+                                Text(
+                                    text = dateState["DayXi"] ?: "喜神方位",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    textAlign = TextAlign.Center,
+                                )
+                            }
+                        }
+                        Card(
+                            modifier = Modifier.weight(1f)
+                                .clip(MaterialTheme.shapes.small)
+                                .clickable { },
+                            shape = MaterialTheme.shapes.small,
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer
+                            )
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .background(
+                                            Color(0xFFFFD100),
+                                            CircleShape
+                                        )
+                                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Text(
+                                        text = "财",
+                                        style = MaterialTheme.typography.headlineSmall,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.SemiBold,
+                                    )
+                                }
+                                Text(
+                                    text = dateState["DayCai"] ?: "财神方位",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    textAlign = TextAlign.Center,
+                                )
+                            }
+                        }
+                        Card(
+                            modifier = Modifier.weight(1f)
+                                .clip(MaterialTheme.shapes.small)
+                                .clickable { },
+                            shape = MaterialTheme.shapes.small,
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer
+                            )
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .background(
+                                            Color(0xFF00FFFF),
+                                            CircleShape
+                                        )
+                                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Text(
+                                        text = "福",
+                                        style = MaterialTheme.typography.headlineSmall,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.SemiBold,
+                                    )
+                                }
+                                Text(
+                                    text = dateState["DayFu"] ?: "福神方位",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    textAlign = TextAlign.Center,
+                                )
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(32.dp))
+                }
+            }
+        }
         updateInfo?.let { update ->
             TipsDialog(
                 isOpen = showUpdateDialog.value,
                 onClose = { showUpdateDialog.value = false },
-                title = "发现新版本 v${update.versionName}",
+                title = "发现新版本",
                 message = "版本：${update.versionCode}\n" +
-                        "大小：${Formatter.formatFileSize(LocalContext.current, update.appSize)}\n" +
-                        "\n更新日志：\n${update.changeLog.ifBlank { "修复了一些已知问题" }}".trimIndent(),
+                        "大小：${
+                            Formatter.formatFileSize(
+                                LocalContext.current,
+                                update.appSize
+                            )
+                        }\n\n" +
+                        "更新日志：\n${update.changeLog.ifBlank { "修复了一些已知问题" }}".trimIndent(),
                 confirmButtonText = "更新",
                 onConfirm = {
                     val url = when {
@@ -596,9 +895,18 @@ fun MinePage(
                     val intent = Intent(Intent.ACTION_VIEW, url.toUri())
                     context.startActivity(intent)
                 },
-                dismissButtonText = "取消",
-                onDismiss = { showUpdateDialog.value = false },
-                closeIcon = false,
+                dismissButtonText = "复制",
+                onDismiss = {
+                    val text = update.downloadUrl
+                    clipboardManager.setPrimaryClip(ClipData.newPlainText("下载链接", text))
+                    val pasted = clipboardManager.primaryClip?.getItemAt(0)?.text?.toString()
+                    if (pasted == text) {
+                        Toast.makeText(context, "复制成功", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "复制失败", Toast.LENGTH_SHORT).show()
+                    }
+                },
+                closeIcon = true,
                 onCloseIconClick = { showUpdateDialog.value = false },
             )
         }

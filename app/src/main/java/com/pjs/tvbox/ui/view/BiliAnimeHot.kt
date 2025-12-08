@@ -216,7 +216,7 @@ fun AnimeHotCard(anime: AnimeHot) {
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .background(
-                                Color(0xfffb7299).copy(alpha = 0.78f),
+                                Color(0xFFFB7299).copy(alpha = 0.88f),
                                 RoundedCornerShape(bottomStart = 8.dp, topEnd = 8.dp)
                             )
                             .padding(horizontal = 7.dp, vertical = 3.dp),
@@ -238,7 +238,7 @@ fun AnimeHotCard(anime: AnimeHot) {
                                 brush = androidx.compose.ui.graphics.Brush.verticalGradient(
                                     colors = listOf(
                                         Color.Transparent,
-                                        Color.Black.copy(alpha = 0.78f)
+                                        Color.Black.copy(alpha = 0.88f)
                                     )
                                 )
                             )
@@ -263,7 +263,8 @@ fun AnimeHotCard(anime: AnimeHot) {
             fontWeight = FontWeight.SemiBold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(top = 4.dp)
                 .wrapContentWidth(Alignment.CenterHorizontally),
         )

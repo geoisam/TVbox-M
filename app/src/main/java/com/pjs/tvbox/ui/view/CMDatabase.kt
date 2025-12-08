@@ -29,9 +29,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.pjs.tvbox.data.CMDatabaseData
 import com.pjs.tvbox.model.NationalSales
@@ -114,6 +117,7 @@ fun CMDatabaseView(
                     ) {
                         item {
                             Column(
+                                modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
                                 Text(
@@ -122,25 +126,27 @@ fun CMDatabaseView(
                                     color = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.padding(vertical = 8.dp),
                                 )
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.Center,
-                                    verticalAlignment = Alignment.Bottom,
-                                ) {
-                                    Text(
-                                        text = national?.salesDesc ?: "null",
-                                        style = MaterialTheme.typography.displayMedium,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontWeight = FontWeight.Bold,
-                                    )
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Text(
-                                        text = national?.salesUnit ?: "万",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.primary,
-                                        fontWeight = FontWeight.Bold,
-                                    )
-                                }
+                                Text(
+                                    text = buildAnnotatedString {
+                                        withStyle(
+                                            SpanStyle(
+                                                fontSize = MaterialTheme.typography.displayMedium.fontSize,
+                                            )
+                                        ) {
+                                            append(national?.salesDesc ?: "null")
+                                        }
+                                        append(" ")
+                                        withStyle(
+                                            SpanStyle(
+                                                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                                            )
+                                        ) {
+                                            append(national?.salesUnit ?: "万")
+                                        }
+                                    },
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.Bold,
+                                )
                                 Text(
                                     text = if (isToday)
                                         "截止 ${national?.updateTimestamp?.toDateString()} (北京时间)"

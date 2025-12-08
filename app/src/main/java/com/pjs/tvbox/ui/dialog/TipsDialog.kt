@@ -54,7 +54,8 @@ fun TipsDialog(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_close),
-                                contentDescription = null,
+                                contentDescription = "关闭",
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                     }

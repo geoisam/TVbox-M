@@ -1,8 +1,12 @@
 package com.pjs.tvbox
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.Formatter
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -64,6 +68,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen() {
     val context = LocalContext.current
+    val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     var overlayPage by remember { mutableStateOf<OverlayPage?>(null) }
     val pagerState = rememberPagerState(pageCount = { 3 })
     val scope = rememberCoroutineScope()
@@ -72,7 +77,7 @@ fun MainScreen() {
     var updateInfo by remember { mutableStateOf<Update?>(null) }
 
     LaunchedEffect(Unit) {
-        if(UpdateUtil.shouldShowDialog()){
+        if (UpdateUtil.shouldShowDialog()) {
             UpdateUtil.currentUpdate()?.let { updateInfo = it }
             UpdateUtil.markDialogShown()
         }
@@ -129,10 +134,10 @@ fun MainScreen() {
             TipsDialog(
                 isOpen = true,
                 onClose = { updateInfo = null },
-                title = "发现新版本 v${update.versionName}",
-                message = "版本：${update.versionCode}\n" +
-                        "大小：${Formatter.formatFileSize(LocalContext.current, update.appSize)}\n" +
-                        "\n更新日志：\n${update.changeLog.ifBlank { "修复了一些已知问题" }}".trimIndent(),
+                title = "发现新版本",
+                message = "版本：${update.versionName}\n" +
+                        "大小：${Formatter.formatFileSize(LocalContext.current, update.appSize)}\n\n" +
+                        "更新日志：\n${update.changeLog.ifBlank { "修复了一些已知问题" }}".trimIndent(),
                 confirmButtonText = "更新",
                 onConfirm = {
                     val url = when {
@@ -142,8 +147,17 @@ fun MainScreen() {
                     val intent = Intent(Intent.ACTION_VIEW, url.toUri())
                     context.startActivity(intent)
                 },
-                dismissButtonText = "取消",
-                onDismiss = { updateInfo = null },
+                dismissButtonText = "复制",
+                onDismiss = {
+                    val text = update.downloadUrl
+                    clipboardManager.setPrimaryClip(ClipData.newPlainText("下载链接", text))
+                    val pasted = clipboardManager.primaryClip?.getItemAt(0)?.text?.toString()
+                    if (pasted == text) {
+                        Toast.makeText(context, "复制成功", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "复制失败", Toast.LENGTH_SHORT).show()
+                    }
+                },
                 closeIcon = true,
                 onCloseIconClick = { updateInfo = null },
             )

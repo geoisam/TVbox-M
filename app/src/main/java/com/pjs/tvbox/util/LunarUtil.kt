@@ -3,11 +3,18 @@ package com.pjs.tvbox.util
 import com.nlf.calendar.Solar
 import com.nlf.calendar.Lunar
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.time.ZoneId
 import java.util.Date
 import java.util.Locale
 
+data class FestivalModel(
+    val name: String,
+    val date: LocalDate,
+    val weekday: String,
+    val daysLeft: Long,
+)
 
 object LunarUtil {
     private val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
@@ -78,6 +85,13 @@ object LunarUtil {
         return lunar.jieQi
     }
 
+    fun getFestivals(): String {
+        val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
+        val solar = Solar.fromDate(Date.from(timeNow.toInstant()))
+        val festival = solar.getFestivals().firstOrNull() ?: ""
+        return festival
+    }
+
     fun getDayYi(): String {
         val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
         val lunar = Lunar.fromDate(Date.from(timeNow.toInstant()))
@@ -98,6 +112,30 @@ object LunarUtil {
         return "${lunar.dayShengXiao}日冲${lunar.dayChongShengXiao}(${lunar.dayChongGan}${lunar.dayChong}) 煞${lunar.daySha}"
     }
 
+    fun getPengZu(): String {
+        val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
+        val lunar = Lunar.fromDate(Date.from(timeNow.toInstant()))
+        return "${lunar.pengZuGan}\n${lunar.pengZuZhi}"
+    }
+
+    fun getDayXi(): String {
+        val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
+        val lunar = Lunar.fromDate(Date.from(timeNow.toInstant()))
+        return "${lunar.dayPositionXiDesc}(${lunar.dayPositionXi})"
+    }
+
+    fun getDayCai(): String {
+        val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
+        val lunar = Lunar.fromDate(Date.from(timeNow.toInstant()))
+        return "${lunar.dayPositionCaiDesc}(${lunar.dayPositionCai})"
+    }
+
+    fun getDayFu(): String {
+        val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
+        val lunar = Lunar.fromDate(Date.from(timeNow.toInstant()))
+        return "${lunar.dayPositionFuDesc}(${lunar.dayPositionFu})"
+    }
+
     fun getShiChen(): String {
         val timeNow = ZonedDateTime.now(ZoneId.systemDefault())
         val lunar = Lunar.fromYmdHms(
@@ -109,5 +147,28 @@ object LunarUtil {
             timeNow.second
         )
         return "${lunar.timeZhi}时"
+    }
+
+    fun getNextFestival(maxDays: Int = 99): FestivalModel? {
+        val today = LocalDate.now()
+        val zone = ZoneId.systemDefault()
+
+        for (i in 0 until maxDays) {
+            val date = today.plusDays(i.toLong())
+            val javaDate = Date.from(date.atStartOfDay(zone).toInstant())
+            val solar = Solar.fromDate(javaDate)
+
+            val festivals = solar.festivals
+            if (festivals.isNotEmpty()) {
+                return FestivalModel(
+                    name = festivals[0],
+                    date = date,
+                    weekday = solar.weekInChinese,
+                    daysLeft = i.toLong(),
+                )
+            }
+        }
+
+        return null
     }
 }

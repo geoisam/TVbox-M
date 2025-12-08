@@ -58,7 +58,7 @@ object UpdateData {
             if (!targetDir.exists()) {
                 targetDir.mkdirs()
             }
-            File(targetDir, "update.txt").writeText( encryptedText, Charsets.UTF_8 )
+            File(targetDir, "update.txt").writeText(encryptedText, Charsets.UTF_8)
         }
         val decryptedJson = CryptoUtil.decrypt(encryptedText) ?: return@runCatching null
         val updateArray =

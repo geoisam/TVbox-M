@@ -210,7 +210,7 @@ private fun AnimeCard(anime: TimelineAnime) {
                         modifier = Modifier
                             .align(Alignment.TopStart)
                             .background(
-                                Color(0xfffb7299).copy(alpha = 0.78f),
+                                Color(0xFFFB7299).copy(alpha = 0.88f),
                                 RoundedCornerShape(topStart = 8.dp, bottomEnd = 8.dp)
                             )
                             .padding(horizontal = 7.dp, vertical = 3.dp),
@@ -232,7 +232,7 @@ private fun AnimeCard(anime: TimelineAnime) {
                                 brush = androidx.compose.ui.graphics.Brush.verticalGradient(
                                     colors = listOf(
                                         Color.Transparent,
-                                        Color.Black.copy(alpha = 0.78f)
+                                        Color.Black.copy(alpha = 0.88f)
                                     )
                                 )
                             )
@@ -257,7 +257,8 @@ private fun AnimeCard(anime: TimelineAnime) {
             fontWeight = FontWeight.SemiBold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(top = 4.dp)
                 .wrapContentWidth(Alignment.CenterHorizontally),
         )
