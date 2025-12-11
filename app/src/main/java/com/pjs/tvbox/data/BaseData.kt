@@ -48,11 +48,19 @@ sealed class MainScreen(
     val chIconId: Int,
     val unIconId: Int
 ) {
-    data object Home : MainScreen("home", R.string.nav_home, R.drawable.ic_home_fill, R.drawable.ic_home)
-    data object Discover :
-        MainScreen("discover", R.string.nav_discover, R.drawable.ic_explore_fill, R.drawable.ic_explore)
+    data object Home :
+        MainScreen("home", R.string.nav_home, R.drawable.ic_home_fill, R.drawable.ic_home)
 
-    data object Mine : MainScreen("mine", R.string.nav_mine, R.drawable.ic_person_fill, R.drawable.ic_person)
+    data object Discover :
+        MainScreen(
+            "discover",
+            R.string.nav_discover,
+            R.drawable.ic_explore_fill,
+            R.drawable.ic_explore
+        )
+
+    data object Mine :
+        MainScreen("mine", R.string.nav_mine, R.drawable.ic_person_fill, R.drawable.ic_person)
 }
 
 // 更新

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -155,7 +156,7 @@ fun HuanTvTopView(
                                 }
                             }
                         }
-                        items(tvRate) { huan ->
+                        itemsIndexed(tvRate) { index, huan ->
                             HorizontalDivider(
                                 color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
                                 thickness = 0.5.dp,
@@ -229,7 +230,7 @@ fun HuanTvTopView(
                                         Spacer(modifier = Modifier.width(4.dp))
                                         huan.channelName?.let {
                                             Text(
-                                                text = it,
+                                                text = "${index + 1}.${it}",
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 color = MaterialTheme.colorScheme.onSurface,
                                                 fontWeight = FontWeight.Bold,

@@ -251,7 +251,7 @@ private fun AboutMain(
                                 painter = painterResource(R.drawable.ic_debug),
                                 contentDescription = null,
                                 modifier = Modifier.size(28.dp),
-                                tint=MaterialTheme.colorScheme.onSurface,
+                                tint = MaterialTheme.colorScheme.onSurface,
                             )
                             Text(
                                 text = stringResource(R.string.about_debug),

@@ -1,99 +1,152 @@
 package com.pjs.tvbox.ui.view
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryScrollableTabRow
-import androidx.compose.material3.Tab
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
-import java.util.Calendar
-
-private val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-
-private val tabTitles: List<String>
-    get() {
-        return when {
-            currentYear < 2017 -> listOf("全部")
-            currentYear == 2017 -> listOf("全部", "2017")
-            currentYear > 2099 -> {
-                listOf("全部") + (2099 downTo 2017).map { it.toString() }
-            }
-            else -> {
-                listOf("全部") + (currentYear downTo 2017).map { it.toString() }
-            }
-        }
-    }
-
-private val tabOrders: List<Int>
-    get() {
-        return when {
-            currentYear < 2017 -> listOf(1)
-            currentYear == 2017 -> listOf(1, 2017)
-            currentYear > 2099 -> {
-                listOf(1) + (2099 downTo 2017).map { it }
-            }
-            else -> {
-                listOf(1) + (currentYear downTo 2017).map { it }
-            }
-        }
-    }
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.pjs.tvbox.data.TicketYear
+import com.pjs.tvbox.ui.viewmodel.CMDbYearViewModel
 
 @Composable
 fun CMDbYearView(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    selectedYear: Int,
+    viewModel: CMDbYearViewModel = viewModel(),
 ) {
-    val context = LocalContext.current
+    val tickets by viewModel.tickets.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val error by viewModel.error.collectAsState()
 
-    val pagerState = rememberPagerState(
-        initialPage = 0,
-        pageCount = { tabTitles.size }
-    )
-    val scope = rememberCoroutineScope()
+    LaunchedEffect(selectedYear) {
+        viewModel.loadByYear(selectedYear)
+    }
 
-    Column(
-        modifier = modifier.fillMaxSize(),
+    val horizontalScroll = rememberScrollState()
+    val pullState = rememberPullToRefreshState()
+
+    PullToRefreshBox(
+        isRefreshing = isLoading,
+        onRefresh = { viewModel.refresh() },
+        state = pullState,
+        modifier = modifier.fillMaxSize()
     ) {
-        PrimaryScrollableTabRow(
-            selectedTabIndex = pagerState.currentPage,
-            modifier = Modifier.fillMaxWidth(),
-            edgePadding = 0.dp,
-            divider = {},
-        ) {
-            tabTitles.forEachIndexed { index, title ->
-                Tab(
-                    selected = pagerState.currentPage == index,
-                    onClick = {
-                        scope.launch { pagerState.animateScrollToPage(index) }
-                    },
-                    text = {
-                        Text(
-                            text = title,
-                            color = if (pagerState.currentPage == index)
-                                MaterialTheme.colorScheme.primary
-                            else
-                                MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontWeight = if (pagerState.currentPage == index)
-                                FontWeight.Bold else FontWeight.Medium,
-                        )
-                    }
-                )
+        Box(Modifier.fillMaxSize()) {
+            when {
+                isLoading && tickets.isEmpty() -> {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+                error != null && tickets.isEmpty() -> {
+                    Text(
+                        text = "加载失败\n\n$error",
+                        modifier = Modifier.align(Alignment.Center),
+                        color = Color.Gray,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                tickets.isEmpty() -> {
+                    Text(
+                        text = "暂无数据",
+                        modifier = Modifier.align(Alignment.Center),
+                        color = Color.Gray,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                else -> {
+                    CMDbYearList(tickets, horizontalScroll)
+                }
             }
-        }
-
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier.fillMaxSize(),
-        ) { page ->
         }
     }
 }
+
+@Composable
+private fun CMDbYearList(
+    tickets: List<TicketYear>,
+    horizontalScrollState: androidx.compose.foundation.ScrollState
+) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        stickyHeader {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Box(modifier = Modifier.width(160.dp)) {
+                    Text(
+                        text = "影片",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        textAlign = TextAlign.Start
+                    )
+                }
+                Row(modifier = Modifier.horizontalScroll(horizontalScrollState)) {
+                    TableHeader("总票房", 140)
+                    TableHeader("平均票价")
+                    TableHeader("场均人次")
+                }
+            }
+        }
+
+        itemsIndexed(tickets) { index, ticket ->
+            Row(
+                Modifier.clickable { },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(modifier = Modifier.width(160.dp)) {
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        ticket.name?.let {
+                            Text(
+                                text = "${index + 1}.${it}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                textAlign = TextAlign.Start
+                            )
+                        }
+                        Text(
+                            text = "${ticket.premiereDate} 上映",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+                Row(modifier = Modifier.horizontalScroll(horizontalScrollState)) {
+                    TableCell("${ticket.salesInWan}万", 140)
+                    TableCell(ticket.avgPrice)
+                    TableCell(ticket.avgSalesCount)
+                }
+            }
+        }
+        item { Spacer(modifier = Modifier.height(18.dp)) }
+    }
+}
+

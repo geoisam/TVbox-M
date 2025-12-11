@@ -62,7 +62,7 @@ object CMDbTicketData {
             id = this["code"]?.jsonPrimitive?.content.orEmpty(),
             name = this["name"]?.jsonPrimitive?.content.orEmpty(),
             onlineSalesRateDesc = this["onlineSalesRateDesc"]?.jsonPrimitive?.content.orEmpty(),
-            releaseDays = this["releaseDays"]?.jsonPrimitive?.intOrNull ?: 0,
+            releaseDays = this["releaseDays"]?.jsonPrimitive?.intOrNull,
             releaseDesc = this["releaseDesc"]?.jsonPrimitive?.content.orEmpty(),
             salesInWanDesc = this["salesInWanDesc"]?.jsonPrimitive?.content.orEmpty(),
             salesRateDesc = this["salesRateDesc"]?.jsonPrimitive?.content.orEmpty(),

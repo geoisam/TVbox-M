@@ -18,7 +18,7 @@ object CMDbYearData {
     }
 
     suspend fun getCMDbYear(year: Int = 1): List<TicketYear> {
-       return runCatching {
+        return runCatching {
             val response = PJS.request(
                 PJSRequest(
                     url = "$CMDB_API/getYearData?year=$year",
@@ -28,19 +28,19 @@ object CMDbYearData {
 
             if (response.status != 200) return@runCatching emptyList()
 
-           val root: JsonObject = when (val body = response.response) {
-               is JsonElement -> body.jsonObject
-               is String -> json.parseToJsonElement(body).jsonObject
-               else -> return@runCatching emptyList()
-           }
+            val root: JsonObject = when (val body = response.response) {
+                is JsonElement -> body.jsonObject
+                is String -> json.parseToJsonElement(body).jsonObject
+                else -> return@runCatching emptyList()
+            }
 
-           val items = root["data"]?.jsonObject?.get("list")?.jsonArray
-               ?: return@runCatching emptyList()
+            val items = root["rankList"]?.jsonArray ?: return@runCatching emptyList()
 
-           items.mapNotNull { it.jsonObject.toTicket() }
+            items.mapNotNull { it.jsonObject.toTicket() }
 
         }.getOrElse { emptyList() }
     }
+
     private fun JsonObject.toTicket(): TicketYear? = runCatching {
         TicketYear(
             id = this["movieCode"]?.jsonPrimitive?.content.orEmpty(),

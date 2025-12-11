@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -74,7 +75,7 @@ fun CMDbTicketView(
 
         if (isToday) {
             while (true) {
-                delay(10_666)
+                delay(12_345)
                 try {
                     val (list, nat) = CMDbTicketData.getCMDbTicket(selectedDate)
                     tickets = list
@@ -173,37 +174,23 @@ fun CMDbTicketView(
                                         .padding(vertical = 8.dp),
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
-                                    Box {
+                                    Box(
+                                        modifier = Modifier.width(160.dp)
+                                    ) {
                                         Text(
-                                            text = "影片名",
+                                            text = "影片",
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = MaterialTheme.colorScheme.onSurface,
                                             fontWeight = FontWeight.Bold,
-                                            modifier = Modifier
-                                                .width(160.dp)
-                                                .padding(horizontal = 16.dp),
+                                            modifier = Modifier.padding(horizontal = 16.dp),
                                             textAlign = TextAlign.Start,
-                                        )
-                                        Box(
-                                            modifier = Modifier
-                                                .width(2.dp)
-                                                .fillMaxHeight()
-                                                .background(
-                                                    brush = Brush.horizontalGradient(
-                                                        colors = listOf(
-                                                            Color.Black.copy(alpha = 0.69f),
-                                                            Color.Transparent
-                                                        )
-                                                    )
-                                                )
-                                                .align(Alignment.CenterEnd)
                                         )
                                     }
                                     Row(
                                         modifier = Modifier.horizontalScroll(horizontalScrollState)
                                     ) {
-                                        TableHeader("总票房")
-                                        TableHeader("综合票房")
+                                        TableHeader("总票房",140)
+                                        TableHeader("综合票房",120)
                                         TableHeader("票房占比")
                                         TableHeader("排片占比")
                                         TableHeader("网售占比")
@@ -212,7 +199,7 @@ fun CMDbTicketView(
                                 }
                             }
                         }
-                        items(tickets) { ticket ->
+                        itemsIndexed(tickets) { index, ticket ->
                             HorizontalDivider(
                                 color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
                                 thickness = 0.5.dp,
@@ -221,15 +208,17 @@ fun CMDbTicketView(
                                 Modifier.clickable {},
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                Box {
+                                Box(
+                                    modifier = Modifier.width(160.dp)
+                                ) {
                                     Column(
                                         Modifier
-                                            .width(160.dp)
+                                            .fillMaxWidth()
                                             .padding(horizontal = 16.dp, vertical = 8.dp)
                                     ) {
                                         ticket.name?.let {
                                             Text(
-                                                text = it,
+                                                text = "${index + 1}.${it}",
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 color = MaterialTheme.colorScheme.onSurface,
                                                 fontWeight = FontWeight.Bold,
@@ -240,38 +229,23 @@ fun CMDbTicketView(
                                         }
                                         Text(
                                             text = when {
-                                                ticket.releaseDesc.isNullOrBlank() && ticket.releaseDesc?.contains(
-                                                    "点映"
-                                                ) != true -> "${ticket.releaseDesc}上映"
-
-                                                ticket.releaseDays!! < 0 -> "${-ticket.releaseDays} 天后上映"
-                                                ticket.releaseDays == 0 -> "今天上映"
+                                                !ticket.releaseDesc.isNullOrBlank() && !ticket.releaseDesc.contains("点映") -> "${ticket.releaseDesc}上映"
+                                                ticket.releaseDays!! < 0 -> "还有 ${-ticket.releaseDays} 天上映"
+                                                ticket.releaseDays == 0 -> "明天上映"
+                                                ticket.releaseDays == 1 -> "上映首日"
                                                 else -> "已上映 ${ticket.releaseDays} 天"
                                             },
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            textAlign = TextAlign.Start,
                                         )
                                     }
-                                    Box(
-                                        modifier = Modifier
-                                            .width(2.dp)
-                                            .fillMaxHeight()
-                                            .background(
-                                                brush = Brush.horizontalGradient(
-                                                    colors = listOf(
-                                                        Color.Black.copy(alpha = 0.69f),
-                                                        Color.Transparent
-                                                    )
-                                                )
-                                            )
-                                            .align(Alignment.CenterEnd)
-                                    )
                                 }
                                 Row(
                                     modifier = Modifier.horizontalScroll(horizontalScrollState)
                                 ) {
-                                    TableCell(ticket.sumSalesDesc)
-                                    TableCell("${ticket.salesInWanDesc}万")
+                                    TableCell(ticket.sumSalesDesc,140)
+                                    TableCell("${ticket.salesInWanDesc}万",120)
                                     TableCell(ticket.salesRateDesc)
                                     TableCell(ticket.sessionRateDesc)
                                     TableCell(ticket.onlineSalesRateDesc)
@@ -280,7 +254,7 @@ fun CMDbTicketView(
                             }
                         }
                         item {
-                            Spacer(modifier = Modifier.height(12.dp))
+                            Spacer(modifier = Modifier.height(18.dp))
                         }
                     }
                 }
@@ -291,31 +265,33 @@ fun CMDbTicketView(
 
 
 @Composable
-private fun TableHeader(
-    text: String,
+fun TableHeader(
+    text: String?,
+    minWidth: Int = 100,
 ) {
     Text(
-        text = text,
+        text = text ?: "-",
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurface,
         fontWeight = FontWeight.Bold,
         modifier = Modifier
-            .widthIn(min = 120.dp)
+            .widthIn(min = minWidth.dp)
             .padding(horizontal = 16.dp),
         textAlign = TextAlign.End,
     )
 }
 
 @Composable
-private fun TableCell(
+fun TableCell(
     text: String?,
+    minWidth: Int = 100,
 ) {
     Text(
-        text = text ?: "",
+        text = text ?: "-",
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurface,
         modifier = Modifier
-            .widthIn(min = 120.dp)
+            .widthIn(min = minWidth.dp)
             .padding(horizontal = 16.dp),
         textAlign = TextAlign.End,
     )
